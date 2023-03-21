@@ -9,6 +9,31 @@ awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
 # dmesg:显示（display message）开机信息
 -T 使用人类方便读取的时间戳格式
 # env 展示系统环境变量
+# fio 灵活的IO测试
+## 模拟坏块 fio --name=badblock --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --offset=1G --direct=1 --invalidate=1 --verify=0 --exitall
+这个命令会在/dev/sdb磁盘的第2GB位置创建一个坏块。使用这个命令需要小心，因为它会直接在磁盘上进行操作，并可能导致数据丢失和硬件损坏。
+## 模拟磁盘故障 fio --name=crash --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --direct=1 --invalidate=1 --verify=0 --do_verify=1 --verify_fatal=1 --exitall
+这个命令会在/dev/sdb磁盘上写入1GB数据，然后立即关闭磁盘。这样会导致数据丢失和文件系统损坏。
+name: job的名字
+ioengine: io引擎；default：psync，sync，vsync。。。。。
+rw：io指令；default：read
+bs： 块大小 default：4096
+numjobs: 将此操作重复多次 default：1
+size： 文件或设备大小；
+filename：工作负载的文件
+offset：从哪里开始io default：0
+direct：使用O_DIRECT读取；default：0
+invalidate：在运行作业之前使缓冲区/页面缓存无效 default：1
+verify：验证数据写 default：0
+exitall：一旦退出终止所有任务
+
+
+### 相关概念
+#### psync/sync/vsync/psynv2
+read pread readv preadv2：主要全部都是从文件中读取数据，不同在于读取的偏移量和读取方式不同；
+write pwrite writev pwritev pwritev2：都是linux/unix中向文件中写入数据的函数，不同之处在写入方式和偏移量不同
+#### O_DIRECT
+lunix/unix中的函数，可以跳过内核缓存直接读取磁盘文件
 # free 检查内存
 -h
 # head  显示开始的几行
@@ -22,6 +47,8 @@ awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
 maj表示不同的设备；
 min表示不同的分区
 # lscpu 展示cpu信息
+# lsscsi ： 展示scsi设备和相关属性
+-l 输出每个scsi设备的附加信息
 # make& cmake 
 
 makefile：具体的构建规则；
