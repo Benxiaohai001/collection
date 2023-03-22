@@ -9,6 +9,8 @@ awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
 # dmesg:显示（display message）开机信息
 -T 使用人类方便读取的时间戳格式
 # env 展示系统环境变量
+# filefrag 文件分片报告
+-e：已区段段形式打印，块映射文件
 # fio 灵活的IO测试
 ## 模拟坏块 fio --name=badblock --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --offset=1G --direct=1 --invalidate=1 --verify=0 --exitall
 这个命令会在/dev/sdb磁盘的第2GB位置创建一个坏块。使用这个命令需要小心，因为它会直接在磁盘上进行操作，并可能导致数据丢失和硬件损坏。
@@ -26,6 +28,7 @@ direct：使用O_DIRECT读取；default：0
 invalidate：在运行作业之前使缓冲区/页面缓存无效 default：1
 verify：验证数据写 default：0
 exitall：一旦退出终止所有任务
+offset:开始io的偏移量
 
 
 ### 相关概念

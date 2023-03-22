@@ -1,4 +1,4 @@
-ifconfig centos系统  使用yum下载 sudo yum install net-tools  net-tools 包含ifconfig命令
+# ifconfig centos系统  使用yum下载 sudo yum install net-tools  net-tools 包含ifconfig命令
 包管理工具：cnetos  yum;ubuntu:apt;
 $# 表示参数的个数
 $@ 表示参数的内容
@@ -20,3 +20,6 @@ devnull 在Linux和unix系统中表示信息黑洞，任何数据都可以指向
 0 表示标准输入
 1表示标准输出
 2表示标准错误输出
+# 文件系统
+## extents
+extents 是文件系统中的一个概念，表示文件在磁盘上的分布情况。当一个文件很大的时候，文件系统会把它分成多个块存储在磁盘上。每个块被称为一个 extent，其中包含了若干个连续的磁盘块。这样做的好处是可以更好地利用磁盘空间，同时也可以提高文件的读写效率。
