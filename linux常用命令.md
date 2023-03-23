@@ -1,5 +1,6 @@
 # awk 
 awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
+awk '{print $2}' 以空格分隔，打印第二个
 # crontab
 -e 编辑定时任务;定时任务日志：Var/log/cron
 # command: 执行一个简单的命令，或者打印命令的相关信息
@@ -62,6 +63,10 @@ lunix/unix中的函数，可以跳过内核缓存直接读取磁盘文件
 maj表示不同的设备；
 min表示不同的分区
 # lscpu 展示cpu信息
+# lsof 展示打开的文件数和网络连接数
+-p pid 展示之指定进程的打开文件和网路链接数量
+## 怎么区分网络连接和文件
+如果 TYPE 列的值为 IPv4、IPv6、TCP、UDP、UNIX 或 unix 等，表示该行记录是一个网络连接；如果 TYPE 列的值为 REG、DIR、FIFO、CHR、BLK 或 LINK 等，表示该行记录是一个打开的文件。
 # lsscsi ： 展示scsi设备和相关属性
 -l 输出每个scsi设备的附加信息
 # make& cmake 
