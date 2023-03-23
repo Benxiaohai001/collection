@@ -6,32 +6,44 @@ awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
 -p
 -V
 -v
+# dd 复制文件，转换格式等
+bs 每次读写多少文件 \
+if 读取的文件 \
+of 写入的文件 \
+count 只复制前N个块
 # dmesg:显示（display message）开机信息
 -T 使用人类方便读取的时间戳格式
 # env 展示系统环境变量
 # filefrag 文件分片报告
 -e：已区段段形式打印，块映射文件
 # fio 灵活的IO测试
-## 模拟坏块 fio --name=badblock --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --offset=1G --direct=1 --invalidate=1 --verify=0 --exitall
+## 常用故障命令
+### 模拟坏块 fio --name=badblock --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --offset=1G --direct=1 --invalidate=1 --verify=0 --exitall
 这个命令会在/dev/sdb磁盘的第2GB位置创建一个坏块。使用这个命令需要小心，因为它会直接在磁盘上进行操作，并可能导致数据丢失和硬件损坏。
-## 模拟磁盘故障 fio --name=crash --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --direct=1 --invalidate=1 --verify=0 --do_verify=1 --verify_fatal=1 --exitall
-这个命令会在/dev/sdb磁盘上写入1GB数据，然后立即关闭磁盘。这样会导致数据丢失和文件系统损坏。
-name: job的名字
-ioengine: io引擎；default：psync，sync，vsync。。。。。
-rw：io指令；default：read
-bs： 块大小 default：4096
-numjobs: 将此操作重复多次 default：1
-size： 文件或设备大小；
-filename：工作负载的文件
-offset：从哪里开始io default：0
-direct：使用O_DIRECT读取；default：0
-invalidate：在运行作业之前使缓冲区/页面缓存无效 default：1
-verify：验证数据写 default：0
-exitall：一旦退出终止所有任务
-offset:开始io的偏移量
+### 模拟磁盘故障 fio --name=crash --ioengine=sync --rw=write --bs=4k --numjobs=1 --size=1G --filename=/dev/sdb --direct=1 --invalidate=1 --verify=0 --do_verify=1 --verify_fatal=1 --exitall
+这个命令会在/dev/sdb磁盘上写入1GB数据，然后立即关闭磁盘。这样会导致数据丢失和文件系统损坏。\
+## 子命令
+name: job的名字 \
+ioengine: io引擎；default：psync，sync，vsync。。。。。\
+rw：io指令；default：read \
+bs： 块大小 default：4096 \
+numjobs: 将此操作重复多次 default：1 \
+size： 文件或设备大小； \
+filename：工作负载的文件 \
+offset：从哪里开始io default：0 \
+direct：使用O_DIRECT读取；default：0 \
+invalidate：在运行作业之前使缓冲区/页面缓存无效 default：1 \
+verify：验证数据写 default：0 \
+exitall：一旦退出终止所有任务 \
+offset:开始io的偏移量 \
+## 报告解读
+### slat
+指将I/O请求提交到系统队列中所需的时间，以纳秒为单位。这个时间包括了I/O请求在fio的I/O引擎中排队等待的时间、以及将请求提交到系统队列中的时间。
+### clat
+指从I/O请求提交到系统队列中开始，到I/O请求完成所需的时间，以纳秒为单位。这个时间包括了I/O请求在系统队列中排队等待的时间、以及磁盘读写操作完成的时间。
 
 
-### 相关概念
+## 相关概念
 #### psync/sync/vsync/psynv2
 read pread readv preadv2：主要全部都是从文件中读取数据，不同在于读取的偏移量和读取方式不同；
 write pwrite writev pwritev pwritev2：都是linux/unix中向文件中写入数据的函数，不同之处在写入方式和偏移量不同
@@ -65,10 +77,10 @@ make编译出现如下错误时，修改cmakelist。txt文件；这里是把部�
 ivh
 # rsync 同步文件
 # sed 修改文件
--i “s/oldstring/newstring/g” xxx.txt
--i "1i xxxx" xxx.txt   文件中第一行插入一行；
--i "s/指定字符串/&之后添加字符串/" /tmp/test.txt
--i "s/指定字符串/之前添加字符串&/" /tmp/test.txt
+-i “s/oldstring/newstring/g” xxx.txt \
+-i "1i xxxx" xxx.txt   文件中第一行插入一行； \
+-i "s/指定字符串/&之后添加字符串/" /tmp/test.txt \
+-i "s/指定字符串/之前添加字符串&/" /tmp/test.txt \
 -i "/xxx/d" xxx.txt 删除包含指定字符串的行
 # set:设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell
