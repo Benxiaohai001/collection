@@ -91,6 +91,7 @@ ivh
 -i "1i xxxx" xxx.txt   文件中第一行插入一行； \
 -i "s/指定字符串/&之后添加字符串/" /tmp/test.txt \
 -i "s/指定字符串/之前添加字符串&/" /tmp/test.txt \
+sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠转意 \
 -i "/xxx/d" xxx.txt 删除包含指定字符串的行
 # set:设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell
