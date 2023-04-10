@@ -12,6 +12,8 @@ bs 每次读写多少文件 \
 if 读取的文件 \
 of 写入的文件 \
 count 只复制前N个块
+# dirname 输出当前文件所在目录
+dirname "$0" 输出执行脚本的目录
 # dmesg:显示（display message）开机信息
 -T 使用人类方便读取的时间戳格式
 # env 展示系统环境变量
@@ -96,6 +98,9 @@ sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠�
 # set:设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell
 # sort :对文档进行排序
+# source：
+设置环境变量；\
+shell 脚本中 source filename表示执行一个脚本
 # systemctl 查询或者发送控制命令到systemd manager
 管理声明周期命令
 # daemon-reload重新加载系统配置
@@ -105,6 +110,7 @@ sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠�
 # top
 -p 监控具体的进程
 # time: 计算命令执行的时间
+# tree 树形结构展示目录下的文件和目录
 # ulimit:
 -a 显示相关设置信息
 -n xxx  设置句柄
