@@ -61,6 +61,43 @@ fdisk 磁盘分区最多2T；如果磁盘分区要求大于2T，可以使用part
 # hexdump: linux下二进制查看工具
 # iostat -xt 2 检查磁盘io速率
 # journalctl：用来查询 systemd-journald 服务收集到的日志。
+# kill 发送信号到进程
+## 常见的信号
+```shell
+[user2@pc] kill -l 9
+KILL
+
+# 列出所有信号名称：
+[user2@pc] kill -l
+ 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL
+ 5) SIGTRAP      6) SIGABRT      7) SIGBUS       8) SIGFPE
+ 9) SIGKILL     10) SIGUSR1     11) SIGSEGV     12) SIGUSR2
+13) SIGPIPE     14) SIGALRM     15) SIGTERM     16) SIGSTKFLT
+17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU
+25) SIGXFSZ     26) SIGVTALRM   27) SIGPROF     28) SIGWINCH
+29) SIGIO       30) SIGPWR      31) SIGSYS      34) SIGRTMIN
+35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3  38) SIGRTMIN+4
+39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12
+47) SIGRTMIN+13 48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14
+51) SIGRTMAX-13 52) SIGRTMAX-12 53) SIGRTMAX-11 54) SIGRTMAX-10
+55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7  58) SIGRTMAX-6
+59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX
+
+# 下面是常用的信号。
+# 只有第9种信号(SIGKILL)才可以无条件终止进程，其他信号进程都有权利忽略。
+
+HUP     1    终端挂断
+INT     2    中断（同 Ctrl + C）
+QUIT    3    退出（同 Ctrl + \）
+KILL    9    强制终止
+TERM   15    终止
+CONT   18    继续（与STOP相反，fg/bg命令）
+STOP   19    暂停（同 Ctrl + Z）
+
+```
 # local: 在函数内部定义局部变量
 # lsblk: 展示所有可用的或者指定的块设备（磁盘）
 展示磁盘的maj：min  
@@ -111,6 +148,8 @@ shell 脚本中 source filename表示执行一个脚本
 -o pipefail 管道中间有有非零返回值，直接返回；
 # top
 -p 监控具体的进程
+# trap 捕捉信号或事件并执行命令
+
 # time: 计算命令执行的时间
 # tree 树形结构展示目录下的文件和目录
 # ulimit:
