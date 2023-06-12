@@ -1,12 +1,20 @@
 # awk 
-awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割
-awk '{print $2}' 以空格分隔，打印第二个
+awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割 \
+awk '{print $2}' 以空格分隔，打印第二个 \
+awk '{if (gsub(/ /,"&") != 2) print NR, $0}' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 判断文件中哪一行没有两个空格
 # crontab
 -e 编辑定时任务;定时任务日志：Var/log/cron
 # command: 执行一个简单的命令，或者打印命令的相关信息
 -p
 -V
 -v
+# curl 与服务端传输数据
+* -I, --head
+仅获取请求头
+* -s, --silent
+静默或退出模式
+* -w, --write-out <format>
+请求完成之后将返回内容输出到标准输出
 # dd 复制文件，转换格式等
 bs 每次读写多少文件 \
 if 读取的文件 \
@@ -59,7 +67,8 @@ fdisk 磁盘分区最多2T；如果磁盘分区要求大于2T，可以使用part
 # head  显示开始的几行
 -n 指定行数
 # hexdump: linux下二进制查看工具
-# iostat -xt 2 检查磁盘io速率
+# iostat -xt 2 检查磁盘io速率 
+# iotop 检查io速率
 # journalctl：用来查询 systemd-journald 服务收集到的日志。
 # kill 发送信号到进程
 ## 常见的信号
@@ -131,11 +140,14 @@ ivh
 -i "s/指定字符串/&之后添加字符串/" /tmp/test.txt \
 -i "s/指定字符串/之前添加字符串&/" /tmp/test.txt \
 sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠转意 \
--i "/xxx/d" xxx.txt 删除包含指定字符串的行
+-i "/xxx/d" xxx.txt 删除包含指定字符串的行 \
+sed -i '1d' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 删除第1行字符串
 # set:设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell
 # shift:
 shift命令可以用于向左移动命令行参数。它将当前的命令行参数列表向左移动一个位置，并将第一个参数丢弃。这意味着，$2现在变成了$1，$3现在变成了$2，以此类推。
+# shuf 
+将输入的随机打乱顺序输出到标准输出中
 # sort :对文档进行排序
 # source：
 设置环境变量；\
