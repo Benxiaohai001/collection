@@ -107,6 +107,14 @@ CONT   18    继续（与STOP相反，fg/bg命令）
 STOP   19    暂停（同 Ctrl + Z）
 
 ```
+
+# killall 通过名称kill所有相关进程
+## centos下载时使用命令
+```bash
+yum install psmisc
+而不是
+yum install killall
+```
 # local: 在函数内部定义局部变量
 # lsblk: 展示所有可用的或者指定的块设备（磁盘）
 展示磁盘的maj：min  
@@ -143,7 +151,8 @@ sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠�
 -i "/xxx/d" xxx.txt 删除包含指定字符串的行 \
 sed -i '1d' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 删除第1行字符串
 # set:设置shell的不同执行方式
--e 如果shell返回结果不是0，立即退出shell
+-e 如果shell返回结果不是0，立即退出shell \
++e 如果返回的结果不是0，程序可以继续执行
 # shift:
 shift命令可以用于向左移动命令行参数。它将当前的命令行参数列表向左移动一个位置，并将第一个参数丢弃。这意味着，$2现在变成了$1，$3现在变成了$2，以此类推。
 # shuf 
