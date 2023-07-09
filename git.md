@@ -1,5 +1,8 @@
 # add
 add alisa url ：添加远程仓库及别名；
+# branch 检查分支，
+-a 显示当前所有分支；\
+-d [分支名称] 删除分支； \
 # checkout
 git checkout src/client.rs 修改该文件后，可以通过该命令恢复； \
 git checkout log_id 恢复仓库代码到指定版本 \
