@@ -61,3 +61,36 @@
   </profiles>
 </settings>
 ```
+
+# 主要的目录结构
+ ```java
+ my-project/
+|-- pom.xml  # 配置文件
+`-- src
+    |-- main  # 项目主要代码和资源文件
+    |   |-- java # java源代码
+    |   |   `-- com 
+    |   |       `-- example
+    |   |           `-- myproject
+    |   |               `-- MyApp.java
+    |   |-- resources # 项目的资源文件
+    |   |   `-- myconfig.xml
+    |   `-- webapp # web应用程序的静态文件
+    |       |-- WEB-INF
+    |       |   `-- web.xml
+    |       `-- index.jsp
+    `-- test # 测试代码和资源文件
+        |-- java
+        |   `-- com
+        |       `-- example
+        |           `-- myproject
+        |               `-- MyAppTest.java
+        `-- resources
+            `-- testconfig.xml
+ ```
+ # 子命令
+mvn package # 编译当前项目 \
+mvn clean \
+compile # 编译成class 文件
+exec:exec # 单独程序中执行程序和java程序 \
+exec:java # 在同一个虚拟机中执行java程序
