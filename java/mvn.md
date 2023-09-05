@@ -92,5 +92,18 @@
 mvn package # 编译当前项目 \
 mvn clean \
 compile # 编译成class 文件
+# 插件 plugin
+## exec maven plugin
 exec:exec # 单独程序中执行程序和java程序 \
 exec:java # 在同一个虚拟机中执行java程序
+
+# vscode 配置
+```json
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.classPath": ["target/classes", "target/test-classes", "/Users/bichaoxue/Library/Java/Extensions", "/Library/Java/Extensions", "/Network/Library/Java/Extensions", "/System/Library/Java/Extensions", "/usr/lib/java", "."],
+    "java.Testclass": ["target/classes", "target/test-classes", "/Users/bichaoxue/Library/Java/Extensions", "/Library/Java/Extensions", "/Network/Library/Java/Extensions", "/System/Library/Java/Extensions", "/usr/lib/java", "."],
+    // "java.testMethod": ["test/java/com/mycompany/app/AppTest.java"],
+    "java.testMethod": ["mvn", "test", "-Dtest=${class}#${method}"]
+}
+```
