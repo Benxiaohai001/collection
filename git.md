@@ -14,6 +14,7 @@ git checkout log_id 恢复仓库代码到指定版本 \
 git rev-parse HEAD 获取当前的commit id \
 git rev-parse --short HEAD 获取当前短 id
 # pull
+git pull origin LTS/2.3:LTS/2.3 # 拉取远程分支，在本地新增一个分支
 # push
 git push --delete 分支名称  删除远程分支 \
 git push 远程仓库名称   \
@@ -39,3 +40,4 @@ git stash \
 把这些 commit 合并 \
  
 git push -f \
+# reflog 查找引用历史

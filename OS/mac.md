@@ -32,3 +32,8 @@ $ source ~/.bash_profile
 # 刷新源
 $ brew update
 ```
+# oh_my_zsh
+更新
+upgrade_oh_my_zsh
+omz update 
+omz changelog
