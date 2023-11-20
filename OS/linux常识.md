@@ -75,3 +75,5 @@ sudo chmod 644 /var/lib/dpkg/lock-frontend
 dpkg --list
 该命令将显示已安装软件包的列表，包括软件包名称、版本号和状态等信息。
 请注意，对 /var/lib/dpkg/status 文件的任何更改都应该非常小心，并且最好由软件包管理工具来处理。误操作或不正确的更改可能导致系统中的软件包状态不一致或损坏。
+
+# signal 11 空指针

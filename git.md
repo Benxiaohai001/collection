@@ -41,3 +41,7 @@ git stash \
  
 git push -f \
 # reflog 查找引用历史
+
+# 原理
+内容寻址的文件系统
+版本控制的用户界面
