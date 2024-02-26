@@ -77,3 +77,6 @@ dpkg --list
 请注意，对 /var/lib/dpkg/status 文件的任何更改都应该非常小心，并且最好由软件包管理工具来处理。误操作或不正确的更改可能导致系统中的软件包状态不一致或损坏。
 
 # signal 11 空指针
+
+# 清理未删除句柄
+lsof | grep deleted | awk '{print $2, $3}' | while read pid fd; do kill -9 $pid; done
