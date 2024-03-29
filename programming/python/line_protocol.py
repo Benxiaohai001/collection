@@ -9,7 +9,7 @@ import string
 
 start_time = 1577808000000000000
 end_time = 1577811600000000000
-interval = 60
+interval = 6000000
 
 
 

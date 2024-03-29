@@ -84,7 +84,7 @@ def main():
     file_name = 'lp_20240314_1800.txt'
     start_time = 1577808000000000000
     end_time = 1577811600000000000
-    interval = 60_000_000_000
+    interval = 60_000_000_0
 
     script_name = sys.argv[0]
     args = sys.argv[1:]
