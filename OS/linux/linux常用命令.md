@@ -122,6 +122,7 @@ yum install killall
 展示磁盘的maj：min  
 maj表示不同的设备；
 min表示不同的分区
+lsblk -d -o name,rota # rote为1表示hdd，rote为0表示sdd
 # lscpu 展示cpu信息
 # lsof 展示打开的文件数和网络连接数
 -p pid 展示之指定进程的打开文件和网路链接数量

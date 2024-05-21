@@ -21,6 +21,13 @@ func Hello(name string) (string, error) {
 	return message, nil
 }
 
+func Hellos(names []string) (string, error) {
+	// A map to associate each name with messages.
+	messages := make(map[string]string)
+	// Loop through the received slice of names, calling the Hello function to get a message for each name.
+	for 
+}
+
 func randomFormat() string { // Add a new function randomFormat to greetings.go, which returns one of three greeting messages selected at random.小写字母开头的函数名表示私有函数，不能导出
 	formats := []string{ // 切片，相当于一个list
 		"Hi, %v. Welcome!",
