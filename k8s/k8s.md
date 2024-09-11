@@ -13,3 +13,5 @@ clusterrolebinding： 所有集群
 
 # 存储
 ## pv pvc
+
+# 

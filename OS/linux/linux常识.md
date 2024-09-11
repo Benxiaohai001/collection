@@ -1,3 +1,6 @@
+# 管道 ｜
+用于命令之间数据流动；
+标准输出｜标准输入：将上一个命令的标准输出作为下一个命令的标准输入；
 # ifconfig centos系统  使用yum下载 sudo yum install net-tools  net-tools 包含ifconfig命令
 # 包管理工具：cnetos  yum;ubuntu:apt;
 # 常见特殊符号

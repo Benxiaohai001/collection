@@ -6,6 +6,7 @@ add alisa url ：添加远程仓库及别名；
 # checkout
 git checkout src/client.rs 修改该文件后，可以通过该命令恢复； \
 git checkout log_id 恢复仓库代码到指定版本 \
+git checkout . 恢复到当前目录最近一次提交的状态 \
 # commit
 # fetch:从远程获取代码库
 # log

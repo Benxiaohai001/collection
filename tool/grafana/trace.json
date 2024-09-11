@@ -1,0 +1,27 @@
+{
+    "datasource": {
+      "uid": "TUoxZQrSz",
+      "type": "jaeger"
+    },
+    "type": "traces",
+    "title": "Panel Title",
+    "gridPos": {
+      "x": 0,
+      "y": 0,
+      "w": 12,
+      "h": 9
+    },
+    "id": 2,
+    "targets": [
+      {
+        "datasource": {
+          "type": "jaeger",
+          "uid": "TUoxZQrSz"
+        },
+        "refId": "A",
+        "service": "test_service",
+        "query": "844f77eeeca8fefcff8f7a39e8520fe6"
+      }
+    ],
+    "pluginVersion": "9.4.3"
+  }

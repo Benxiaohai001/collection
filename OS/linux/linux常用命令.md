@@ -173,6 +173,9 @@ systemctl status node_exporter
 systemctl enable node_exporter  开机启动；
 systemctl disable node_exporter // 取消开机启动
 
+# tcpdump
+tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+获取指定端口被访问api
 
 # daemon-reload重新加载系统配置
 # tar 
@@ -195,7 +198,9 @@ systemctl disable node_exporter // 取消开机启动
 # uniq：过滤重复的行
 -d：仅显示重复的行，不进行删除；
 # vim/vi:
-命令模式：
+## 取消行号
+:set nonu
+## 命令模式：
 $ 跳到本行末尾
 0 跳到本行开头
 普通模式：
