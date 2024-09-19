@@ -1,0 +1,1 @@
+/Users/bichaoxue/Documents/github.com/collection/programming/rust/course/advance/4.\ rust高级进阶/4.10\ macro\ 宏编程/test001/target/debug/test001: /Users/bichaoxue/Documents/github.com/collection/programming/rust/course/advance/4.\ rust高级进阶/4.10\ macro\ 宏编程/test001/src/main.rs

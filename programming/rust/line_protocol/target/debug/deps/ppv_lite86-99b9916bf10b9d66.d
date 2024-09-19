@@ -1,0 +1,8 @@
+/Users/bichaoxue/Documents/github.com/collection/编程语言/rust/line_protocol/target/debug/deps/libppv_lite86-99b9916bf10b9d66.rmeta: /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/lib.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/soft.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/types.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/generic.rs
+
+/Users/bichaoxue/Documents/github.com/collection/编程语言/rust/line_protocol/target/debug/deps/ppv_lite86-99b9916bf10b9d66.d: /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/lib.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/soft.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/types.rs /Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/generic.rs
+
+/Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/lib.rs:
+/Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/soft.rs:
+/Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/types.rs:
+/Users/bichaoxue/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/ppv-lite86-0.2.17/src/generic.rs:
