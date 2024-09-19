@@ -1,0 +1,7 @@
+[package]
+name = "test001"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hello_macro = { path = "../test001/hello_macro_derive"}
