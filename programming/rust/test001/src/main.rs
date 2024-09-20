@@ -11,4 +11,10 @@ fn main() {
     // assert_eq!(un.unwrap(), 32);
     let un2: Result<u32, String> = Err("error".to_string());
     assert_eq!(un2.unwrap(), 32);
+    for i in 0..10 {
+        do_something().unwrap();
+        // println!("{}", i);
+    }
 }
+
+fn do_something() {}
