@@ -37,3 +37,6 @@ $ brew update
 upgrade_oh_my_zsh
 omz update 
 omz changelog
+
+# 快捷键
+^-/ ⌃⇧- go back/forward
