@@ -20,3 +20,19 @@
 ## 空指针
 # 变量声明
 强类型语言
+
+# 初始化变量
+c语言式初始化
+int x = 0；
+构造器式初始化
+int x(0);
+统一的初始化；列表初始化；
+int x {0}
+# 类型推断：自动声明类型
+int foo = 0;
+auto bar = foo; // the same as : int bar = foo;
+
+int foo =0;
+decltype(foo) bar; // the same as : int bar;
+
+# 字符串介绍
