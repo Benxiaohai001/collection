@@ -39,3 +39,15 @@ L wchar_t
 对于字符串
 u8 utf-8
 R 原始字符串
+### 其他字面量
+true, false, nullptr
+## 类型化常量表达式
+const double pi =3.1415926;
+const char tab = '\t';
+## 预处理定义
+```
+#define identifier replacement
+```
+预处理是在编译之前， 后续的identifier 会与replacement 进行绑定
+后面不需要分号;如果后续出现分号，可能会报错；
+单独存在一行；
