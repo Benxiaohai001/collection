@@ -35,14 +35,16 @@ def lp_generator_thread(start_time, end_time, interval, ring_buffer):
 
     tb_name = 'testtb'
     # tags = [f'{i:08}' for i in range(100000000)]
+    tags = [f'{i:08}' for i in range(100)]
     tag_index = 0
-
+    # fields = [f'{i:08}' for i in range(10000)]
+    field_index = 0
     buf = ''
     max_buf_size = 1024 * 1024 * 100
     while start_time <= end_time:
-        tag = 'tag=tag1'
-        # tag = f'tag={tags[tag_index]}'
-        # tag_index = (tag_index + 1) % len(tags)
+        # tag = 'tag=tag1'
+        tag = f'tag={tags[tag_index]}'
+        tag_index = (tag_index + 1) % len(tags)
         # random_strings = [''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(10, 40))) for _ in range(200)]
         # random_ints = [random.randint(1, 100000) for _ in range(150)]
         # random_ints = [f"{random.randint(1, 100000)}i" for _ in range(150)]
@@ -52,8 +54,10 @@ def lp_generator_thread(start_time, end_time, interval, ring_buffer):
         # field_str_set = ",".join([f'field_str{i}="{random_strings[i]}"' for i in range(200)])
         # field_set = ",".join([f"field{i}={combined_data[i]}" for i in range(300)])
 
-        field_set = f"field1={random.randint(1, 10)}i"
-
+        # field_set = f"field1={random.randint(1, 10)}i"
+        field_set = f"field1={field_index}i"
+        # field_index = (field_index + 1) % len(fields)
+        field_index += 1
         # buf += f"{tb_name},{tag} {field_str_set},{field_set} {start_time}\n"
         buf += f"{tb_name},{tag} {field_set} {start_time}\n"
         start_time += interval
