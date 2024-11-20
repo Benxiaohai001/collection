@@ -1,0 +1,1 @@
+/Users/bichaoxue/Documents/work_code/github.com/collection/programming/rust/course/rust_program_language/10\ generic\ type,\ traits,\ and\ liftimes/test_grneric_type/target/debug/test_grneric_type: /Users/bichaoxue/Documents/work_code/github.com/collection/programming/rust/course/rust_program_language/10\ generic\ type,\ traits,\ and\ liftimes/test_grneric_type/src/main.rs

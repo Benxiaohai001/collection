@@ -1,0 +1,1 @@
+/Users/bichaoxue/Documents/work_code/github.com/collection/programming/rust/std/test001_arc/target/debug/test001_arc: /Users/bichaoxue/Documents/work_code/github.com/collection/programming/rust/std/test001_arc/src/main.rs
