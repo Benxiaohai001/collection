@@ -111,3 +111,46 @@
 //     println!("p.x = {}", p.x());
 // }
 
+
+
+// 参数不相同的声明
+// struct Point<X1, Y1> {
+//     x: X1,
+//     y: Y1,
+// }
+// impl<X1, Y1> Point<X1, Y1> {
+//     fn mixup<X2, Y2>(self, other: Point<X2, Y2>) -> Point<X1, Y2> {
+//         Point {
+//             x: self.x,
+//             y: other.y,
+//         }
+//     }
+// }
+// fn main() {
+//     let p1 = Point {x: 5, y: 10.4};
+//     let p2 = Point {x: "Hellp", y: 'c'};
+//     let p3 = p1.mixup(p2);
+//     println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+// }
+
+
+// 使用泛型的代码性能
+// 单态化
+// enum Option_i32 {
+//     Some(i32),
+//     None,
+// }
+// enum Option_f64 {
+//     Some(f64),
+//     None,
+// }
+enum Option<T> {
+    Some(T),
+    None,
+}
+fn main() {
+    // let integer = Option_i32::Some(5);
+    // let float = Option_f64::Some(5.0);
+    let integer = Option::Some(5);
+    let float = Option::Some(5.0);
+}
