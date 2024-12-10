@@ -283,7 +283,11 @@
 // }
 // impl TrafficLight {
 //     pub fn show_state(&self) {
-//         println!("the current state is: {}", &self.color);
+//         // &self.color是显式引用
+//         // self.color隐式引用 
+//         // rust会自动解引用
+//         // println!("the current state is: {}", &self.color);
+//         println!("the current state is: {}", self.color);
 //     }
 // }
 // fn main() {
@@ -332,18 +336,40 @@
 // }
 
 // 5.
-struct Rectangle {
-    width: u32,
-    height: u32,
+// struct Rectangle {
+//     width: u32,
+//     height: u32,
+// }
+// impl Rectangle {
+//     fn area(&self) -> u32 {
+//         self.width * self.height
+//     }
+// }
+// impl Rectangle {
+//     fn can_hold(&self, other: &Rectangle) -> bool {
+//         self.width > other.width && self.height > other.height
+//     }
+// }
+// fn main() {}
+
+// 6.
+#[derive(Debug)]
+enum TrafficLightColor {
+    Red,
+    Yellow,
+    Green,
 }
-impl Rectangle {
-    fn area(&self) -> u32 {
-        self.width * self.height
+impl TrafficLightColor {
+    fn color(&self) -> &str {
+        match self {
+            TrafficLightColor::Red => "red",
+            TrafficLightColor::Yellow => "yellow",
+            TrafficLightColor::Green => "green",
+        }
     }
 }
-impl Rectangle {
-    fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width > other.width && self.height > other.height
-    }
+fn main() {
+    let c = TrafficLightColor::Yellow;
+    assert_eq!(c.color(), "yellow");
+    println!("{:?}", c);
 }
-fn main() {}

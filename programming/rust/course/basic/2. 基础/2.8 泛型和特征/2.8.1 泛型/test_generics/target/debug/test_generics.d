@@ -1,0 +1,1 @@
+D:\code\collection\programming\rust\course\basic\2.\ 基础\2.8\ 泛型和特征\2.8.1\ 泛型\test_generics\target\debug\test_generics.exe: D:\code\collection\programming\rust\course\basic\2.\ 基础\2.8\ 泛型和特征\2.8.1\ 泛型\test_generics\src\main.rs
