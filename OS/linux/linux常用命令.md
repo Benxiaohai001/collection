@@ -1,4 +1,6 @@
-# awk 
+# apt
+ubuntu包管理
+# awk
 awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割 \
 awk '{print $2}' 以空格分隔，打印第二个 \
 awk '{if (gsub(/ /,"&") != 2) print NR, $0}' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 判断文件中哪一行没有两个空格
@@ -24,6 +26,9 @@ count 只复制前N个块
 dirname "$0" 输出执行脚本的目录
 # dmesg:显示（display message）开机信息
 -T 使用人类方便读取的时间戳格式
+# du
+检查目录占用空间
+du -h --max-depth=1 ./
 # env 展示系统环境变量
 # filefrag 文件分片报告
 -e：已区段段形式打印，块映射文件
@@ -178,7 +183,7 @@ tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&
 获取指定端口被访问api
 
 # daemon-reload重新加载系统配置
-# tar 
+# tar
 -C 解压到指定目录
 -o pipefail 管道中间有有非零返回值，直接返回；
 # top
@@ -219,5 +224,9 @@ control+v进入块选择模式，
 control + v进入块选择模式；
 上下键选择需要取消注释的内容；
 点击d 取消注释
-# who 打印当前登陆的用户
-# wget 非交互式文件下载工具
+# who
+打印当前登陆的用户
+# wget
+非交互式文件下载工具
+# yum
+centos/redhat 包管理工具
