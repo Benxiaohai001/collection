@@ -4,6 +4,11 @@ ubuntu包管理
 awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割 \
 awk '{print $2}' 以空格分隔，打印第二个 \
 awk '{if (gsub(/ /,"&") != 2) print NR, $0}' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 判断文件中哪一行没有两个空格
+# chmod
+* 权限：读 4 r， 写 2 w， 执行 1 x；
+# chown
+修改所有者
+`chown username:usergroup dirname/filename`
 # crontab
 -e 编辑定时任务;定时任务日志：Var/log/cron
 # command: 执行一个简单的命令，或者打印命令的相关信息
@@ -22,6 +27,8 @@ bs 每次读写多少文件 \
 if 读取的文件 \
 of 写入的文件 \
 count 只复制前N个块
+# df
+展示文件系统磁盘使用情况
 # dirname 输出当前文件所在目录
 dirname "$0" 输出执行脚本的目录
 # dmesg:显示（display message）开机信息
@@ -29,6 +36,9 @@ dirname "$0" 输出执行脚本的目录
 # du
 检查目录占用空间
 du -h --max-depth=1 ./
+# echo
+输出
+echo "string" > file_name
 # env 展示系统环境变量
 # filefrag 文件分片报告
 -e：已区段段形式打印，块映射文件
@@ -74,7 +84,9 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 # head  显示开始的几行
 -n 指定行数
 # hexdump: linux下二进制查看工具
-# iostat -xt 2 检查磁盘io速率 
+# iostat -xt 2 检查磁盘io速率
+# jobs
+展示后台运行的进程
 # iotop 检查io速率
 # journalctl：用来查询 systemd-journald 服务收集到的日志。
 # kill 发送信号到进程
@@ -82,7 +94,6 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 ```shell
 [user2@pc] kill -l 9
 KILL
-
 # 列出所有信号名称：
 [user2@pc] kill -l
  1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL
@@ -105,14 +116,13 @@ KILL
 # 下面是常用的信号。
 # 只有第9种信号(SIGKILL)才可以无条件终止进程，其他信号进程都有权利忽略。
 
-HUP     1    终端挂断
+HUP     1    终端挂断,相当于进程重新加载配置文件
 INT     2    中断（同 Ctrl + C）
 QUIT    3    退出（同 Ctrl + \）
 KILL    9    强制终止
 TERM   15    终止
 CONT   18    继续（与STOP相反，fg/bg命令）
 STOP   19    暂停（同 Ctrl + Z）
-
 ```
 
 # killall 通过名称kill所有相关进程
@@ -124,7 +134,7 @@ yum install killall
 ```
 # local: 在函数内部定义局部变量
 # lsblk: 展示所有可用的或者指定的块设备（磁盘）
-展示磁盘的maj：min  
+展示磁盘的maj：min
 maj表示不同的设备；
 min表示不同的分区
 lsblk -d -o name,rota # rote为1表示hdd，rote为0表示sdd
@@ -135,7 +145,7 @@ lsblk -d -o name,rota # rote为1表示hdd，rote为0表示sdd
 如果 TYPE 列的值为 IPv4、IPv6、TCP、UDP、UNIX 或 unix 等，表示该行记录是一个网络连接；如果 TYPE 列的值为 REG、DIR、FIFO、CHR、BLK 或 LINK 等，表示该行记录是一个打开的文件。
 # lsscsi ： 展示scsi设备和相关属性
 -l 输出每个scsi设备的附加信息
-# make& cmake 
+# make& cmake
 
 makefile：具体的构建规则；
 make编译出现如下错误时，修改cmakelist。txt文件；这里是把部分警告信息作为error输出了
@@ -158,7 +168,8 @@ ivh
 sed -i "s/>/\&&/" run_cluster.sh 如果字符串中有特殊字符&用反斜杠转意 \
 -i "/xxx/d" xxx.txt 删除包含指定字符串的行 \
 sed -i '1d' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 删除第1行字符串
-# set:设置shell的不同执行方式
+# set
+设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell \
 +e 如果返回的结果不是0，程序可以继续执行
 # shift:
@@ -166,9 +177,11 @@ shift命令可以用于向左移动命令行参数。它将当前的命令行参
 # shuf 
 将输入的随机打乱顺序输出到标准输出中
 # sort :对文档进行排序
-# source：
+# source：.
 设置环境变量；\
 shell 脚本中 source filename表示执行一个脚本
+# ssh
+ssh username@host_ip 登陆某个机器
 # systemctl 查询或者发送控制命令到systemd manager
 管理声明周期命令
 systemctl daemon-reload // 更新配置
@@ -203,6 +216,8 @@ tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&
 # uniq：过滤重复的行
 -d：仅显示重复的行，不进行删除；
 # vim/vi:
+## 编码
+`:set encoding=utf-8` # 设置编码方式为`utf-8`
 ## 取消行号
 :set nonu
 ## 命令模式：

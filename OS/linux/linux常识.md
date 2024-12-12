@@ -1,8 +1,29 @@
+# POSIX
+POSIX（Portable Operating System Interface for Unix）是IEEE（电气电子工程师协会）制定的一系列标准。旨在提高操作系统的可移植性和兼容性。[POSIX](#posix)定义了操作系统接口，包括系统调用、函数库、命令行工具、和shell脚本等。
+    主要组成部分:
+    * 系统接口（system interface）
+    * shell和实用程序
+    * 线程
+    * 实时扩展
+# `source` and `.`
+* same
+    * 都可以在shell环境中执行脚本
+* diff
+    * source是bash和其他一些shell的内建命令；. 是[posix标准](#posix)的一部分，几乎在所有的unix中都可以使用。
+    * `source`更明确，而 `.`更简洁，可读性较差。
+# `>`和`>>`
+'>': 输出到指定文件
+`>>`: 追加到指定文件
+# BASH_BUILTINS
+bash的内置命令（不需要可执行二进制文件）
 # 管道 ｜
 用于命令之间数据流动；
 标准输出｜标准输入：将上一个命令的标准输出作为下一个命令的标准输入；
-# ifconfig centos系统  使用yum下载 sudo yum install net-tools  net-tools 包含ifconfig命令
-# 包管理工具：cnetos  yum;ubuntu:apt;
+# ifconfig
+centos系统  使用yum下载 sudo yum install net-tools  net-tools 包含ifconfig命令
+# 包管理工具
+cnetos  yum;\
+ubuntu:apt;
 # 常见特殊符号
 $# 表示参数的个数
 $@ 表示参数的内容
@@ -19,22 +40,32 @@ echo "source /opt/rh/devtoolset-11/enable" >> /etc/profile \
 source /etc/profile \
 yum install openssl openssl-devel \
 目录
-# linux中常见的目录盘符
-## proc 目录:保存运行时的部分基本信息
+# 常见的目录盘符
+## proc 
+目录:保存运行时的部分基本信息
 提供系统内核运行时的信息。/proc 目录下的文件和子目录实际上并不是真实的文件和目录，而是在内核运行时动态生成的，它们提供有关系统内核、进程、设备和网络等方面的信息。 \
-### /proc/cpuinfo：包含了 CPU 的信息，如型号、速度、缓存等等。
-### /proc/meminfo：包含了系统内存的信息，如总内存、可用内存、缓存等等。
-### /proc/filesystems：包含了支持的文件系统类型的列表。
-### /proc/loadavg：包含了系统的平均负载，即过去 1 分钟、5 分钟、15 分钟内的平均进程数。
-### /proc/net：包含了网络相关的信息，如网络接口、TCP 和 UDP 连接等等。
-### /proc/sys：包含了内核参数的信息，可以用来设置和查询内核参数的值。
-### /proc/<PID>：包含了某个进程的信息，如进程的状态、命令行参数、打开的文件、网络连接等等。
-## >/dev/null 2>&1 ：将所有的标准输出和错误输出全部输出到 dev null 
+### /proc/cpuinfo
+包含了 CPU 的信息，如型号、速度、缓存等等。
+### /proc/meminfo
+包含了系统内存的信息，如总内存、可用内存、缓存等等。
+### /proc/filesystems
+包含了支持的文件系统类型的列表。
+### /proc/loadavg
+包含了系统的平均负载，即过去 1 分钟、5 分钟、15 分钟内的平均进程数。
+### /proc/net
+包含了网络相关的信息，如网络接口、TCP 和 UDP 连接等等。
+### /proc/sys
+包含了内核参数的信息，可以用来设置和查询内核参数的值。
+### /proc/<PID>
+包含了某个进程的信息，如进程的状态、命令行参数、打开的文件、网络连接等等。
+## >/dev/null 2>&1
+将所有的标准输出和错误输出全部输出到 dev null 
 devnull 在Linux和unix系统中表示信息黑洞，任何数据都可以指向他，\
 0 表示标准输入 \
 1表示标准输出 \
-2表示标准错误输出 
-## /dev/zero: 是linux中的一个特殊设备字符文件，可以从中读取无限量的零字节。
+2表示标准错误输出
+## /dev/zero
+是linux中的一个特殊设备字符文件，可以从中读取无限量的零字节。
 # 文件系统
 ## extents
 extents 是文件系统中的一个概念，表示文件在磁盘上的分布情况。当一个文件很大的时候，文件系统会把它分成多个块存储在磁盘上。每个块被称为一个 extent，其中包含了若干个连续的磁盘块。这样做的好处是可以更好地利用磁盘空间，同时也可以提高文件的读写效率。
@@ -44,7 +75,8 @@ echo 1 > /proc/sys/vm/drop_caches
 '''
 # swap
 在Linux操作系统中，"swap" 是指用于虚拟内存管理的一种机制。虚拟内存是一种将计算机的物理内存和硬盘空间结合起来使用的技术，允许操作系统将部分内存中的数据临时存储到硬盘上，以释放物理内存供其他程序使用。
-# cpu&mem 分别在什么情况下会使用相应的资源？
+# cpu&mem
+分别在什么情况下会使用相应的资源？
 系统资源的占用情况涉及到多个因素，包括进程的需求、系统调度策略、应用程序设计等。下面是一些常见的情况，描述了在什么情况下会占用 CPU 和内存：
 ## 占用 CPU 的情况：
 * 运行计算密集型任务：当程序需要进行大量的计算、处理复杂算法或执行大量的循环时，会占用较多的 CPU 资源。
