@@ -1,0 +1,52 @@
+#! /usr/bin/env python3
+import argparse
+from datetime import datetime, timezone
+
+def convert_to_timestamp(date_str, precision):
+    dt = datetime.fromisoformat(date_str).replace(tzinfo=timezone.utc)
+    if precision == 'seconds':
+        return int(dt.timestamp())
+    elif precision == 'milliseconds':
+        return int(dt.timestamp() * 1e3)
+    elif precision == 'nanoseconds':
+        return int(dt.timestamp() * 1e9)
+    else:
+        raise ValueError("Invalid precision. Use 'seconds', 'milliseconds', or 'nanoseconds'.")
+
+def convert_to_datetime(timestamp, precision):
+    if precision == 'seconds':
+        dt = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+    elif precision == 'milliseconds':
+        dt = datetime.fromtimestamp(timestamp / 1e3, tz=timezone.utc)
+    elif precision == 'nanoseconds':
+        dt = datetime.fromtimestamp(timestamp / 1e9, tz=timezone.utc)
+    else:
+        raise ValueError("Invalid precision. Use 'seconds', 'milliseconds', or 'nanoseconds'.")
+    return dt.isoformat()
+
+def main():
+    parser = argparse.ArgumentParser(description="Convert between datetime and timestamp.")
+    parser.add_argument('--to-timestamp', type=str, help="Convert datetime to timestamp. Format: YYYY-MM-DDTHH:MM:SS")
+    parser.add_argument('--to-datetime', type=int, help="Convert timestamp to datetime.")
+    parser.add_argument('--precision', type=str, choices=['seconds', 'milliseconds', 'nanoseconds'], default='seconds', help="Precision of the timestamp.")
+    # parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, help='Show this help message and exit.')
+
+    args = parser.parse_args()
+
+    if args.to_timestamp:
+        try:
+            timestamp = convert_to_timestamp(args.to_timestamp, args.precision)
+            print(f"Timestamp: {timestamp}")
+        except ValueError as e:
+            print(f"Error: {e}")
+    elif args.to_datetime:
+        try:
+            dt = convert_to_datetime(args.to_datetime, args.precision)
+            print(f"Datetime: {dt}")
+        except ValueError as e:
+            print(f"Error: {e}")
+    else:
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()
