@@ -77,6 +77,8 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 ```shell
 [user2@pc] kill -l 9
 KILL
+kill SIGSEGV/11 pid # 使进程crash
+kill SIGABRT/6 pid # 使进程crash
 
 # 列出所有信号名称：
 [user2@pc] kill -l
