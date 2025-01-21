@@ -1,0 +1,42 @@
+# 力扣
+## 双指针
+### [88. 合并两个有序数组](https://leetcode.cn/problems/merge-sorted-array/description/)
+```python
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        point1, point2 = 0, 0
+        while point1 < m or point2 < n:
+            if point1 >= m:
+                nums1[point1:] = nums2[point2:]
+                return
+            if point2 >= n:
+                return
+            if nums2[point2] < nums1[point1]:
+                nums1.insert(point1, nums2[point2])
+                nums1.pop()
+                point2 += 1
+                point1 += 1
+                m += 1
+            else:
+                point1 += 1
+```
+## 二分法
+### [278. 第一个错误的版本](https://leetcode.cn/problems/first-bad-version/description/)
+```python
+# The isBadVersion API is already defined for you.
+# def isBadVersion(version: int) -> bool:
+class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        left, right = 1, n
+        while left <= right:
+            mid = (left + right) // 2
+            if isBadVersion(mid):
+                right = mid - 1
+            else:
+                left = mid + 1
+        return left
+```
+
