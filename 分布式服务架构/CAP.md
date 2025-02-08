@@ -1,7 +1,7 @@
 # CAP理论
 分布式系统中的CAP理论，三者不可兼得。Consistency（一致性）、 Availability（可用性）、Partition tolerance（分区容错性）3个特性。
 * Consistency（一致性）
-同一时刻，不同客户端读取的内容要么是一致的，要么返回一样的错误**数据一致**。
+同一时刻，不同节点读取的内容要么是一致的，要么返回一样的错误**数据一致**。
 * Availability (可用性)
 我一定会提供服务，但是不保证是最新的，**不会出错**。
 * Partition tolerance（分区容错性）
