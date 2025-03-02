@@ -1,0 +1,1 @@
+通过gpt4all在笔记本上部署大模型，本地部署模型deepseek-r1-distill-Qwen-1.5B
