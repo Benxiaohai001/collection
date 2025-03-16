@@ -168,4 +168,61 @@ select *
 from websites
 where name not like '%oo%';
 ```
+# 通配符
 
+通常与`like`关键字一起使用
+% 0个或多个字符
+_ 替代一个字符
+[charlist] 字符列中任意一个单一字符
+[^charlist]/[!charlist] 不在字符列中任意单一字符
+```sql
+-- 
+select * 
+from websites 
+where url like 'https%';
+-- 
+select * 
+from websites
+where name like '_oogle';
+-- ^[GFs]
+-- like 与 regexp 区别
+-- like： 匹配规则相对固定和简单；性能方面较高；
+-- regerp：支持更多正则表达式特有的规则；性能较差
+select * 
+from websites
+where name regexp '^[GFs]';
+-- 以A-H开头的 
+select *
+from websites
+where name regexp '^[A-H]';
+-- 不以A-H开头的
+select *
+from websites
+where name regexp '^[^A-H]';
+```
+# in
+```sql
+-- syntax
+select column1, column2, ...
+from tb_name
+where column in (value1, value2, ...);
+-- 
+select *
+from websites
+where name in ('Google', '菜鸟教程');
+```
+# between
+```sql
+-- syntax
+select column1, column2, ...
+from tb_name
+where column between value1 and value2;
+-- 
+select *
+from websites
+where alexa between 1 and 20;
+-- not between
+select *
+from websites
+where alexa not between 1 and 20;
+```
