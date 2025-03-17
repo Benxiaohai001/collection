@@ -225,4 +225,27 @@ where alexa between 1 and 20;
 select *
 from websites
 where alexa not between 1 and 20;
+-- in + between
+select *
+from websites
+where (alexa between 1 and 20)
+and country not in ('USA', 'IND');
+-- 带有文本值的between操作符实例
+select * 
+from websites
+where name between 'A' and 'H';
+-- not between
+select *
+from websites
+where name not between 'A' and 'H';
+-- 带有日期的between
+select *
+from access_log
+where date between '2016-05-10' and '2016-05-14';
+```
+# 别名
+```sql
+-- syntax
+select column_name as alias_name
+from tb_name;
 ```
