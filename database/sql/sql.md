@@ -249,3 +249,420 @@ where date between '2016-05-10' and '2016-05-14';
 select column_name as alias_name
 from tb_name;
 ```
+# sql别名
+```sql
+-- syntax
+-- column alias name
+select column_name as alias_name
+from tb_name;
+-- tb name
+select column_name(s)
+from tb_name as alias_name;
+-- cloumn alias name
+select name as n, country as c
+from websites;
+-- concat()
+select name, concat(url, ',', alexa, ',', country) as site_info
+from websites;
+-- tb name
+select w.name, w.url, a.count, a.date
+from websites as w, access_log as a
+where a.site_id=w.id and w.name="菜鸟教程";
+```
+# 连接（join）
+```sql
+-- inner join 交集
+-- left join 保留左表
+-- right join 保留右表
+-- full outer join 并集
+-- cross join 笛卡尔积（每行左表与每行右表组合）
+-- self join 自身连接
+-- natural join 同名字段自动匹配连接
+-- syntax
+select column1, column2, ...
+from tb1 join tb2
+on contidion;
+-- inner join
+select websites.id, websites.name, access_log.count, access_log.date
+from websites inner join access_log
+on websites.id=access_log.site_id;
+```
+# inner join
+```sql
+-- sybtax
+select column_name(s)
+from tb1
+inner join tb2
+on tb1.column_name=tb2.column_name;
+-- 
+select column_name(s)
+from tb1
+join tb2
+on tb1.column_name=tb2.column_name;
+-- inner join
+runoob=# select students.name, enrollments.course
+runoob-# from students
+runoob-# inner join enrollments
+runoob-# on students.studentid=enrollments.studentid;
+ name  | course
+-------+---------
+ bob   | science
+ alice | math
+(2 行记录)
+runoob=# select websites.name, access_log.count, access_log.date from websites inner join 
+access_log on websites.id=access_log.site_id order by access_log.count;
+   name   | count |    date
+----------+-------+------------
+ 淘宝     |    10 | 2016-05-14
+ 微博     |    13 | 2016-05-15
+ google   |    45 | 2016-05-10
+ 菜鸟教程 |   100 | 2016-05-13
+ 菜鸟教程 |   201 | 2016-05-17
+ facebook |   205 | 2016-05-14
+ 菜鸟教程 |   220 | 2016-05-15
+ google   |   230 | 2016-05-14
+ facebook |   545 | 2016-05-16
+(9 行记录)
+```
+# left join
+```sql
+-- syntax
+select column_name(s)
+from tb1
+left join tb2
+on tb1.column_name=tb2.column_name;
+-- syntax2
+select column_name(s)
+from tb1
+left outer join tb2
+on tb1.column_name=tb2.column_name;
+-- example 1
+runoob=# create table customers(customerid smallint, name varchar(100));
+CREATE TABLE
+runoob=# insert into customers(customerid, name) values(1, 'alice'), (2, 'bob'), (3, 'charlie'), (4, 'david');
+INSERT 0 4
+runoob=# create table orders(orderid smallint, customerid smallint, product varchar(100));
+
+CREATE TABLE
+runoob=# insert into orders(orderid, customerid, product)values(101, 1, 'laptop'), (102, 2, 'smartphone');
+INSERT 0 2
+runoob=# select c.name, o.product from customers as c left join orders as o on c.customeri
+d=o.customerid; 
+  name   |  product
+---------+------------
+ alice   | laptop
+ bob     | smartphone
+ charlie |
+ david   |
+(4 行记录)
+-- example2
+runoob=# select w.name, a.count, a.date from websites as w left join access_log as a on w.
+id=a.site_id order by a.count desc;
+     name      | count |    date
+---------------+-------+------------
+ stackoverflow |       |
+ facebook      |   545 | 2016-05-16
+ google        |   230 | 2016-05-14
+ 菜鸟教程      |   220 | 2016-05-15
+ facebook      |   205 | 2016-05-14
+ 菜鸟教程      |   201 | 2016-05-17
+ 菜鸟教程      |   100 | 2016-05-13
+ google        |    45 | 2016-05-10
+ 微博          |    13 | 2016-05-15
+ 淘宝          |    10 | 2016-05-14
+(10 行记录)
+```
+# right join
+```sql
+-- syntax
+select column_name(s)
+from tb1
+right join tb2
+on tb1.column_name=tb2.column_name;
+-- syntax 2
+select column_name(s)
+from tb1
+right outer join tb2
+on tb1.column_name=tb2.column_name;
+-- example1
+runoob=# create table departments(departmentid smallint, departmentname varchar(30));
+CREATE TABLE
+runoob=# insert into departments(departmentid, departmentname) values(10, 'hr'), (20, 'it'
+), (30, 'finance');
+INSERT 0 3
+runoob=# create table employees(employeeid smallint, name varchar(100), departmentid smallint);
+CREATE TABLE                                                      ^
+runoob=# insert into employees(employeeid, name, departmentid)values(1, 'alice', 10), (2, 'bob', 20), (3, 'charlie', null);
+INSERT 0 3
+runoob=# select * from employees;
+ employeeid |  name   | departmentid
+------------+---------+--------------
+          1 | alice   |           10
+          2 | bob     |           20
+          3 | charlie |
+(3 行记录)
+runoob=# select e.name, d.departmentname from employees as e right join departments as d o
+n e.departmentid=d.departmentid;
+ name  | departmentname
+-------+----------------
+ alice | hr
+ bob   | it
+       | finance
+(3 行记录)
+-- example2
+runoob=# insert into access_log(aid, site_id, count, date)values(10, 6, 111, '2016-03-09');  
+INSERT 0 1
+runoob=# select w.name, a.count, a.date from websites as w right join access_log as a on a
+.site_id=w.id order by a.count desc;
+   name   | count |    date
+----------+-------+------------
+ facebook |   545 | 2016-05-16
+ google   |   230 | 2016-05-14
+ 菜鸟教程 |   220 | 2016-05-15
+ facebook |   205 | 2016-05-14
+ 菜鸟教程 |   201 | 2016-05-17
+          |   111 | 2016-03-09
+ 菜鸟教程 |   100 | 2016-05-13
+ google   |    45 | 2016-05-10
+ 微博     |    13 | 2016-05-15
+ 淘宝     |    10 | 2016-05-14
+(10 行记录)
+```
+# full outer join
+```sql
+-- syntax
+select column_name(s)
+from tb1
+full outer join tb2
+on tb1.column_name=tb2.column_name;
+runoob=# create table courses(courseid smallint, studentid smallint, coursename varchar(50));
+CREATE TABLE
+runoob=# insert into courses(courseid, studentid, coursename) values(101, 1, 'math'), (102, 2, 'science'), (103, 4, 'history');
+INSERT 0 3
+runoob=# select s.studentid, s.name, c.coursename from students as s full outer join courses as c on s.studentid=c.studentid;
+ studentid |  name   | coursename
+-----------+---------+------------
+         2 | bob     | science
+         3 | charlie |
+         1 | alice   | math
+           |         | history
+(4 行记录)
+-- example2
+runoob=# select w.name, a.count, a.date from websites as w full join access_log as a on w.
+id=a.site_id order by a.count desc;
+     name      | count |    date
+---------------+-------+------------
+ stackoverflow |       |
+ facebook      |   545 | 2016-05-16
+ google        |   230 | 2016-05-14
+ 菜鸟教程      |   220 | 2016-05-15
+ facebook      |   205 | 2016-05-14
+ 菜鸟教程      |   201 | 2016-05-17
+               |   111 | 2016-03-09
+ 菜鸟教程      |   100 | 2016-05-13
+ google        |    45 | 2016-05-10
+ 微博          |    13 | 2016-05-15
+ 淘宝          |    10 | 2016-05-14
+(11 行记录)
+```
+# union
+```sql
+-- syntax
+-- 默认会去重，如果需要保留重复的记录，可以使用`union all`
+select column1, column2, ...
+from tb1
+union (all)
+select column1, column2, ...
+from tb2;
+-- example 1
+runoob=# create table apps(id smallint, app_name varchar(100), url varchar(100), country varchar(30));
+CREATE TABLE                                              
+runoob=# insert into apps(id, app_name, url, country)values(1, 'qq app', 'http://im.qq.com', 'cn'), (2, '微博 app', 'http://weibo.com', 'cn'), (3, '淘宝 app', 'https://taobao.com', 'cn');
+INSERT 0 3
+-- union结果集中的列名总是等于union中第一个select语句中的列名。
+runoob=# select country from websites union select country from apps order by country;
+ country
+---------
+ cn
+ ind
+ usa
+(3 行记录)
+
+
+runoob=# select country from websites union all  select country from apps order by country
+;
+ country
+---------
+ cn
+ cn
+ cn
+ cn
+ cn
+ cn
+ ind
+ usa
+ usa
+(9 行记录)
+-- example 2
+runoob=# select country, name from websites where country='cn' union all select country, a
+pp_name from apps where country='cn' order by country;
+ country |   name
+---------+----------
+ cn      | 淘宝
+ cn      | 菜鸟教程
+ cn      | 微博
+ cn      | qq app
+ cn      | 微博 app
+ cn      | 淘宝 app
+(6 行记录)
+```
+# select into
+<!-- 从一个表中复制数据到另一个表中 -->
+```sql
+-- syntax
+create table new_tb
+as 
+select * from old_tb;
+-- mysql
+insert into ... select ...;
+-- example 1
+-- 1. select into 会创建一个新表，并且新表的结构将基于选择的列和数据类型。
+-- 2. 如果表已存在，select into 语句将失败。这种情况下可以使用insert into ... select 语句；
+runoob=# select * into employees_backup from employees;
+SELECT 3
+-- example 2
+runoob=# create table employees_backup_001 as select * from employees where departmentid >
+= 10;
+SELECT 2
+runoob=# select * from employees_backup_001;
+ employeeid | name  | departmentid
+------------+-------+--------------
+          1 | alice |           10
+          2 | bob   |           20
+(2 行记录)
+```
+# insert into select
+<!-- 从一个表中复制数据到另一个已存在的表中， -->
+```sql
+-- syntax
+insert into tb2
+select * from tb1;
+-- syntax 1
+insert into tb2(column_name(s))
+select column_name(s)
+from tb1;
+-- example 1
+runoob=# select * from websites;
+ id |     name      |            url            | alexa | country
+----+---------------+---------------------------+-------+---------
+  1 | google        | http://google.com         |     1 | usa
+  2 | 淘宝          | https://www.taobao.com    |    13 | cn
+  3 | 菜鸟教程      | https://www.runoob.com    |  4689 | cn
+  4 | 微博          | https://www.weibo.com     |    20 | cn
+  5 | facebook      | https://www.facebook.com  |     3 | usa
+  7 | stackoverflow | https://stackoverflow.com |     0 | ind
+(6 行记录)
+
+
+runoob=# select * from apps;    
+ id | app_name |        url         | country
+----+----------+--------------------+---------
+  1 | qq app   | http://im.qq.com   | cn
+  2 | 微博 app | http://weibo.com   | cn
+  3 | 淘宝 app | https://taobao.com | cn
+(3 行记录)
+
+
+runoob=# insert into websites(name, country) select app_name, country from apps;
+INSERT 0 3
+runoob=# select * from websites;
+ id |     name      |            url            | alexa | country
+----+---------------+---------------------------+-------+---------
+  1 | google        | http://google.com         |     1 | usa
+  2 | 淘宝          | https://www.taobao.com    |    13 | cn
+  3 | 菜鸟教程      | https://www.runoob.com    |  4689 | cn
+  4 | 微博          | https://www.weibo.com     |    20 | cn
+  5 | facebook      | https://www.facebook.com  |     3 | usa
+  7 | stackoverflow | https://stackoverflow.com |     0 | ind
+    | qq app        |                           |       | cn
+    | 微博 app      |                           |       | cn
+    | 淘宝 app      |                           |       | cn
+(9 行记录)
+-- example 2
+runoob=# select * from websites;
+ id |     name      |            url            | alexa | country
+----+---------------+---------------------------+-------+---------
+  1 | google        | http://google.com         |     1 | usa
+  2 | 淘宝          | https://www.taobao.com    |    13 | cn
+  3 | 菜鸟教程      | https://www.runoob.com    |  4689 | cn
+  4 | 微博          | https://www.weibo.com     |    20 | cn
+  5 | facebook      | https://www.facebook.com  |     3 | usa
+  7 | stackoverflow | https://stackoverflow.com |     0 | ind
+    | qq app        |                           |       | cn
+    | 微博 app      |                           |       | cn
+    | 淘宝 app      |                           |       | cn
+(9 行记录)
+
+
+runoob=# select * from apps;                                                              
+ id | app_name |        url         | country
+----+----------+--------------------+---------
+  1 | qq app   | http://im.qq.com   | cn
+  2 | 微博 app | http://weibo.com   | cn
+  3 | 淘宝 app | https://taobao.com | cn
+(3 行记录)
+
+
+runoob=# insert into websites(name, country) select app_name, country from apps where id=1
+;
+INSERT 0 1
+runoob=# select * from websites;                                                          
+ id |     name      |            url            | alexa | country
+----+---------------+---------------------------+-------+---------
+  1 | google        | http://google.com         |     1 | usa
+  2 | 淘宝          | https://www.taobao.com    |    13 | cn
+  3 | 菜鸟教程      | https://www.runoob.com    |  4689 | cn
+  4 | 微博          | https://www.weibo.com     |    20 | cn
+  5 | facebook      | https://www.facebook.com  |     3 | usa
+  7 | stackoverflow | https://stackoverflow.com |     0 | ind
+    | qq app        |                           |       | cn
+    | 微博 app      |                           |       | cn
+    | 淘宝 app      |                           |       | cn
+    | qq app        |                           |       | cn
+(10 行记录)
+```
+# create database
+```sql
+-- syntax
+create database dbname;
+-- example 1
+runoob=# \l
+                                                                              数据库列表 
+   名称    |  拥有者  | 字元编码 | Locale Provider |            校对规则            |             Ctype              | ICU Locale | ICU Rules |       存取权限
+-----------+----------+----------+-----------------+--------------------------------+--------------------------------+------------+-----------+-----------------------
+ mydb      | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ postgres  | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ runoob    | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ template0 | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           | =c/postgres          +
+           |          |          |                 |                                |                                |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           | =c/postgres          +
+           |          |          |                 |                                |                                |            |           | postgres=CTc/postgres
+(5 行记录)
+
+
+runoob=# create database runoob_mydb;
+CREATE DATABASE
+runoob=# \l
+                                                                               数据库列表
+    名称     |  拥有者  | 字元编码 | Locale Provider |            校对规则            |             Ctype              | ICU Locale | ICU Rules |       存取权限
+-------------+----------+----------+-----------------+--------------------------------+--------------------------------+------------+-----------+-----------------------
+ mydb        | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ postgres    | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ runoob      | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ runoob_mydb | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           |
+ template0   | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           | =c/postgres          +
+             |          |          |                 |                                |                                |            |           | postgres=CTc/postgres
+ template1   | postgres | UTF8     | libc            | Chinese (Simplified)_China.936 | Chinese (Simplified)_China.936 |            |           | =c/postgres          +
+             |          |          |                 |                                |                                |            |           | postgres=CTc/postgres
+(6 行记录)
+```
