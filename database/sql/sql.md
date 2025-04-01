@@ -666,3 +666,132 @@ runoob=# \l
              |          |          |                 |                                |                                |            |           | postgres=CTc/postgres
 (6 行记录)
 ```
+# create table
+```sql
+-- syntax
+create table tb_name
+(
+    column_name1 data_type(size),
+    column_name2 data_type(size),
+    ...
+);
+-- example 1
+runoob=# \d
+                      关联列表
+ 架构模式 |         名称         |  类型  |  拥有者  
+----------+----------------------+--------+----------
+ public   | access_log           | 数据表 | postgres
+ public   | apps                 | 数据表 | postgres
+ public   | courses              | 数据表 | postgres
+ public   | customers            | 数据表 | postgres
+ public   | departments          | 数据表 | postgres
+ public   | employees            | 数据表 | postgres
+ public   | employees_backup     | 数据表 | postgres
+ public   | employees_backup_001 | 数据表 | postgres
+ public   | enrollments          | 数据表 | postgres
+ public   | orders               | 数据表 | postgres
+ public   | students             | 数据表 | postgres
+ public   | websites             | 数据表 | postgres
+(12 行记录)
+
+
+runoob=# create table persons(personid int, lastname varchar(255), firstname varchar(255), address varchar(255), city varchar(255));
+CREATE TABLE
+runoob=# \d
+                      关联列表
+ 架构模式 |         名称         |  类型  |  拥有者
+----------+----------------------+--------+----------
+ public   | access_log           | 数据表 | postgres
+ public   | apps                 | 数据表 | postgres
+ public   | courses              | 数据表 | postgres
+ public   | customers            | 数据表 | postgres
+ public   | departments          | 数据表 | postgres
+ public   | employees            | 数据表 | postgres
+ public   | employees_backup     | 数据表 | postgres
+ public   | employees_backup_001 | 数据表 | postgres
+ public   | enrollments          | 数据表 | postgres
+ public   | orders               | 数据表 | postgres
+ public   | persons              | 数据表 | postgres
+ public   | students             | 数据表 | postgres
+ public   | websites             | 数据表 | postgres
+(13 行记录)
+```
+# 约束
+```sql
+-- syntax
+create table tb_name
+(
+    column1 data_type(size) constraint_name,
+    column2 data_type(size) constraint_name,
+    ...
+);
+-- constraint name
+not null
+unique 唯一值
+primary key - 相当于是not null 和unique的结合，主键
+foreign key - 保证一个表中的数据匹配另一个表中的值，参照完整性
+check - 保证列中的值复合指定条件
+default - 规定没有值时的默认值
+index - 用于快速访问数据库表中的数据
+-- example 1 not null
+runoob=# create table students_001(studentid int not null, lastname varchar(50) not null, firstname varchar(50), age int);
+CREATE TABLE
+runoob=# insert into students_001(age) values(29);
+-- 错误:  null value in column "studentid" of relation "students_001" violates not-null constraint
+-- 描述:  失败, 行包含(null, null, null, 29).
+runoob=# insert into students_001(studentid, age) values(1, 29);
+-- 错误:  null value in column "lastname" of relation "students_001" violates not-null constraint
+-- 描述:  失败, 行包含(1, null, null, 29).
+runoob=# insert into students_001(studentid, lastname,  age) values(1,'baker', 29);
+INSERT 0 1
+-- example 2 unique
+runoob=# create table employees_001(employeeid int not null unique, lastname varchar(50) n
+ot null, firstname varchar(50), email varchar(100) unique);
+CREATE TABLE
+runoob=# insert into employees_001(employeeid, lastname, firstname, email)values(1, 'x', 'baker', '111@123.com');
+INSERT 0 1
+runoob=# insert into employees_001(employeeid, lastname, firstname, email)values(1, 'x1', 
+'baker1', '111@123.com');
+-- 错误:  重复键违反唯一约束"employees_001_employeeid_key"
+-- 描述:  键值"(employeeid)=(1)" 已经存在
+-- example 3 primary key
+runoob=# create table orders001(doderid int not null primary key, ordernumber int not null
+, orderdate date not null);
+CREATE TABLE
+-- example 4 foreign key
+runoob=# create table orders_002(orderid int not null primary key, ordernumber int not null, customerid int, foreign key(customerid) references customers(customerid));
+-- 错误:  没有唯一约束与关联表 "customers" 给定的键值匹配
+runoob=# alter table customers add primary key(customerid);
+ALTER TABLE
+runoob=# create table orders_002(orderid int not null primary key, ordernumber int not null, customerid int, foreign key(customerid) references customers(customerid));
+CREATE TABLE
+-- 5. check
+-- 确保列中的值满足特定条件
+runoob=# create table products_001(productid int not null primary key, productname varchar(100) not null, price decimal(10, 2) check(price >= 0));
+CREATE TABLE
+-- 6. default
+runoob=# create table customers_002(customerid int not null primary key, lastname varchar(50) not null, firstname varchar(50), joindate date default now());    
+CREATE TABLE
+-- 7. index
+runoob=# create index idx_lastname on employees(employeeid);
+CREATE INDEX
+```
+# not null
+```sql
+-- example 1
+runoob=# create table persons_001(id int not null, lastname varchar(255) not null, firstna
+me varchar(255) not null, age int);
+CREATE TABLE
+runoob=# alter table persons_001 alter column age set  not null;
+ALTER TABLE
+runoob=# alter table persons_001 alter column age drop   not null;
+ALTER TABLE
+runoob=# \d persons_001
+                   数据表 "public.persons_001"
+   栏位    |          类型          | 校对规则 |  可空的  | 预设
+-----------+------------------------+----------+----------+------
+ id        | integer                |          | not null |
+ lastname  | character varying(255) |          | not null |
+ firstname | character varying(255) |          | not null |
+ age       | integer                |          |          |
+```
