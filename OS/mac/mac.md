@@ -40,3 +40,4 @@ omz changelog
 
 # 快捷键
 ^-/ ⌃⇧- go back/forward
+ctrl + 上  显示所有的打开的屏幕

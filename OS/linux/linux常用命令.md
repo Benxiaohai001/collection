@@ -1,3 +1,5 @@
+# arch
+显示当前环境cpu架构
 # awk 
 awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割 \
 awk '{print $2}' 以空格分隔，打印第二个 \
@@ -197,6 +199,7 @@ tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&
 -a 打印所有信息
 -r 打印内核信息
 -n 打印节点名称
+-m 打印当前节点cpu系统架构
 # uniq：过滤重复的行
 -d：仅显示重复的行，不进行删除；
 # vim/vi:
