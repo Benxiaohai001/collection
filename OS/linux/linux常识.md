@@ -104,3 +104,5 @@ sudo chmod 644 /var/lib/dpkg/lock-frontend
 
 * 清空nohup.out，后续进程还可以写入数据，但是不会删除nohup.out文件
 :>nohup.out
+# epel
+EPEL(Extra Packages for Enterprise Linux)
