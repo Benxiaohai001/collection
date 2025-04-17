@@ -48,3 +48,19 @@ git push -f \
 版本控制的用户界面
 # 拉取远程指定分支到本地指定分支并切换
 git checkout -b 本地分支名 origin/远程分支名
+# 删除历史中某个commit
+## 1. 启动交互式变基（例如删除最近5个提交中的中间提交）
+git rebase -i HEAD~5
+
+## 2. 在编辑器中标记要删除的 commit，将 `pick` 改为 `drop`
+## 示例：
+pick abc123 Commit A
+drop def456 Commit B  # 删除此提交
+pick ghi789 Commit C
+
+## 3. 保存退出，解决可能的冲突
+git add .
+git rebase --continue
+
+## 4. 强制推送更新后的历史
+git push origin 分支名 --force
