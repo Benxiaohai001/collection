@@ -64,3 +64,6 @@ git rebase --continue
 
 ## 4. 强制推送更新后的历史
 git push origin 分支名 --force
+
+# 拉取远程分支到本地，并直接切换到该分支
+git checkout -b tmp origin/tmp
