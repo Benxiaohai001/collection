@@ -3,3 +3,5 @@
 接受json和yaml格式。
 # 设置默认命名空间
 kubectl config set-context --current --namespace=your_namespace
+# 进入pod的指定容器
+kubectl exec -it -n jenkins postgres-pr-pr-92-68-59x1h-2jhb8-gctfd -c oracle -- bash

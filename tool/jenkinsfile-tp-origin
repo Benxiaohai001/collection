@@ -1,0 +1,623 @@
+import java.util.concurrent.atomic.AtomicInteger
+@Library('pdb-ci-libraries@checkscm') _
+import com.openpie.Constant
+import com.openpie.utils.versionset.VersionSetHelper
+
+String runningStage = "null"
+
+def compileTypes = ['release', 'debug']
+def productNames = ["PieCloudDB TP"]
+def pdbCommitID = ""
+def plugins = []
+def imgUrls = [:]
+def nnPackageDownloadUrls = [:]
+// test pr
+setThirdpartVersion()
+initPrEnv()
+setBuilderImage(productName: Constant.product.PIECLOUDDB_TP.str,gitAddress:params.GIT_URL,branch:params.BRANCH_NAME, type:"pr", os: Constant.operatingSystem.UBUNTU_22_04.str)
+// stop build with title: wip
+if (checkWip(repoAddress: "tsp/postgres")) {
+    currentBuild.result = 'ABORTED'
+    return
+}
+// stop build with PR's comment '/ci-stop'
+if (env.pull_request_comment == '/ci-stop') {
+    print "INFO: Build abort due to /ci-stop"
+    currentBuild.result = 'ABORTED'
+    return
+}
+
+commitFiles = handlePrCommits()
+initChecks()
+
+Map packageDownloadUrls = [:]
+
+
+
+pipeline {
+    parameters {
+        string(name: 'PRODUCT_NAME', defaultValue: "PieCloudDB TP", description: 'Product Name') 
+        // choice(name: 'PRODUCT_NAME', choices: ['PieCloudDB TP', 'PieCloudVector'], description: 'Product Name')
+        string(name: 'BRANCH_NAME', defaultValue: 'pdbtp_stable', description: 'Branch Name')
+        string(name: 'GIT_URL', defaultValue: 'ssh://git@ssh.git.dev.openpie.com:2222/tsp/postgres.git', description: 'Git Url')
+        string(name: 'ARCH', defaultValue: Constant.cpuArch.X86_64.str, description: 'CPU Architecture')
+        // choice(name: 'ARCH', choices: [Constant.cpuArch.X86_64.str, Constant.cpuArch.ARM64.str], description: 'CPU Architecture')
+        string(name: 'OS', defaultValue: Constant.operatingSystem.UBUNTU_22_04.str, description: 'Operating System')
+        // choice(name: 'OS', choices: [Constant.operatingSystem.UBUNTU_20_04.str], description: 'Operating System')
+        booleanParam(name: 'PLUGIN_POST_GIS', defaultValue: true, description: 'postgis plugin')
+        booleanParam(name: 'PLUGIN_PGVECTOR', defaultValue: true, description: 'pgvector plugin')
+        booleanParam(name: 'PLUGIN_PLR', defaultValue: true, description: 'plr plugin')
+        booleanParam(name: 'PLUGIN_SCWS', defaultValue: true, description: 'scws plugin')
+        booleanParam(name: 'PLUGIN_ZHARSER', defaultValue: true, description: 'zhparser plugin')
+        booleanParam(name: 'PLUGIN_PG_AUDIT', defaultValue: true, description: 'pgaudit plugin')
+        booleanParam(name: 'PLUGIN_PGSQL_GZIP', defaultValue: true, description: 'pgsql-gzip plugin')
+        booleanParam(name: 'PLUGIN_PGZSTD', defaultValue: true, description: 'pgzstd plugin')
+        booleanParam(name: 'PLUGIN_PGEM', defaultValue: false, description: 'pgem plugin')
+        booleanParam(name: 'PLUGIN_NN', defaultValue: true, description: 'pdbnn plugin')
+        booleanParam(name: 'PLUGIN_SEARCH', defaultValue: true, description: 'pdb-search plugin')
+        booleanParam(name: 'PLUGIN_HISTORY', defaultValue: true, description: 'pdb-history plugin')
+        booleanParam(name: 'PLUGIN_TDE', defaultValue: true, description: 'pdb-tde plugin')
+        booleanParam(name: 'PLUGIN_MYSQL_FDW', defaultValue: true, description: 'mysql_fdw plugin')
+        booleanParam(name: 'PLUGIN_ORACLE_FDW', defaultValue: true, description: 'oracle_fdw plugin')
+        booleanParam(name: 'PLUGIN_PDB_FUM', defaultValue: true, description: 'pdb_fum plugin')
+        booleanParam(name: 'PLUGIN_AGE', defaultValue: true, description: 'age plugin')
+        booleanParam(name: 'PLUGIN_MPPSQL', defaultValue: true, description: 'mppsql plugin')
+        booleanParam(name: 'PLUGIN_TIMESERIES', defaultValue: true, description: 'timeseries plugin')
+        booleanParam(name: 'ONLY_BUILD_FAISS', defaultValue: false, description: 'only build faiss')
+        // string(name: 'FAISS_OPT_LEVEL', defaultValue: 'avx2', description: 'faiss opt level') 
+        choice(name: 'FAISS_OPT_LEVEL', choices: ['avx2', 'Generic'], description: 'faiss opt level')
+        choice(name: 'FAISS_ACCELERATION', choices: ['amd', 'default'], description: 'faiss Acceleration')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'run tests')
+
+    }
+    agent {
+        kubernetes {
+            yaml loadPodYaml(name: "builder_without_ccache_oracle.yaml", arch: params.ARCH)
+            podRetention byLabel()
+            defaultContainer 'shell'
+            cloud "kubernetes-test1"
+        }
+    }
+    environment {
+        ORACLE_HOME="/opt/oracle/instantclient_23_7/"
+        LD_LIBRARY_PATH="${env.ORACLE_HOME}:${env.LD_LIBRARY_PATH}"
+        PATH="${env.ORACLE_HOME}:${env.PATH}"
+    }    
+    triggers {
+        GenericTrigger(
+            genericVariables: [
+                [
+                    key:'pull_request_number',
+                    value:'$.issue.number'
+                ],
+                [
+                    key:'action',
+                    value:'$.action'
+                ],
+                [
+                    key:'pull_request_comment',
+                    value:'$.comment.body'
+                ]
+            ],
+            genericHeaderVariables: [
+                [
+                    key: 'X-Gitea-Event', regexpFilter: 'issue_comment'
+                ]
+            ],
+        causeString: 'PR Comment Trigger: $pull_request_comment',
+        token: '319522cb939db8ab6153e9aa525ca39bca',
+        tokenCredentialId: '',
+        printContributedVariables: true,
+        printPostContent: true,
+        silentResponse: false,
+
+        regexpFilterText: '$action##PR-$pull_request_number##$pull_request_comment',
+        regexpFilterExpression: 'created##PR-\\d+##/ci-(run|stop).*$'
+        )
+    }
+    options {
+        disableConcurrentBuilds abortPrevious: true
+        skipDefaultCheckout()
+        timeout(time: 10, unit: 'HOURS')
+        timestamps()
+    }
+    stages {
+        stage('Params') {
+            steps {
+                script {
+		    sh 'echo $ORACLE_HOME'
+                    params.each { paramName, paramValue ->
+                        echo "$paramName = $paramValue"
+                    }
+                }
+            }
+        }
+        stage('Checkout SCM') {
+            steps {
+                script {
+                    if (params.ONLY_BUILD_FAISS) {
+                        println("ONLY_BUILD_FAISS")
+                        return
+                    }
+                    try {
+                        runningStage = env.STAGE_NAME
+                        print "Checkout start"
+			checkoutSCM(checkoutType: 'pr', branchName: params.BRANCH_NAME, gitUrl: params.GIT_URL)
+                        env.PDB_VERSION=env.JOB_NAME.replace('/', '-') + "-" + env.COMMIT_ID
+			pdbCommitID = sh(script: 'git rev-parse --short HEAD || echo', returnStdout: true).trim()
+                    } catch (e) {
+                        throw e
+                    }
+                }
+            }
+        }
+        stage('Build GMSSL') {
+            steps {
+                script {
+                    sh"""#!/bin/bash
+                    echo "download GmSSL_34fa519dc.tar.gz"
+                    wget http://deb.dev.openpie.com/software/GmSSL_34fa519dc.tar.gz
+                    tar zxvf GmSSL_34fa519dc.tar.gz
+                    cd GmSSL && cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON && cd build && sudo make install -j8
+                    """
+                }
+            }
+        }
+
+        stage('Build Faiss') {
+            steps {
+                script {
+                    if (params.PLUGIN_NN) {
+                        faissCompile(arch:params.ARCH,os:params.OS,faissAcceleration:params.FAISS_ACCELERATION,faissOptLevel:params.FAISS_OPT_LEVEL)
+                    }
+                    println("prepare completed")
+                }
+            }
+        }
+
+        stage('Build Grpc') {
+            steps {
+                sh"""
+                 echo "download grpc_0cadd7cd52.tar.gz"
+                 wget http://deb.dev.openpie.com/software/grpc_0cadd7cd52.tar.gz
+                 tar zxvf grpc_0cadd7cd52.tar.gz
+                 cd grpc && cmake -B build -DCMAKE_BUILD_TYPE=Release -DgRPC_ABSL_PROVIDER=module -DgRPC_CARES_PROVIDER=module -DgRPC_PROTOBUF_PROVIDER=module -DgRPC_RE2_PROVIDER=module -DgRPC_SSL_PROVIDER=package -DgRPC_ZLIB_PROVIDER=package -DgRPC_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=ON && cd build && sudo make install -j8
+                """
+            }
+        }
+        stage('Build TP') {
+            steps {
+                script {
+                    runningStage = env.STAGE_NAME
+                    if (params.ONLY_BUILD_FAISS) {
+                        println("ONLY_BUILD_FAISS")
+                        return
+                    }
+                    if (params.PLUGIN_SCWS) {
+                        plugins.add("scws")
+                        dir('contrib/scws') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/scws.git")
+                        }
+                    }
+                    if (params.PLUGIN_ZHARSER) {
+                        plugins.add("zhparser")
+                        dir('contrib/zhparser') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/zhparser.git")
+                        }
+                    }
+                    if (params.PLUGIN_PG_AUDIT) {
+                        plugins.add("pgaudit")
+                        dir('contrib/pgaudit') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "REL_15_STABLE", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/pgaudit.git")
+                        }
+                    }
+                    if (params.PLUGIN_PGSQL_GZIP) {
+                        plugins.add("pgsql-gzip")
+                        dir('contrib/pgsql-gzip') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/pgsql-gzip.git")
+                        }
+                    }
+                    if (params.PLUGIN_PGZSTD) {
+                        plugins.add("pgzstd")
+                        dir('contrib/pgzstd') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/pgzstd.git")
+                        }
+                    }
+                    if (params.PLUGIN_PGEM) {
+                        plugins.add("simplembed")
+                        dir('contrib/simplembed') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "main", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/simplembed.git")
+                        }
+                    }
+                    if (params.PLUGIN_NN) {
+                        plugins.add("pdbnn")
+                    }
+                    if (params.PLUGIN_PGVECTOR) {
+                        plugins.add("pgvector")
+                        dir('contrib/pgvector') {
+                            // checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/pgvector.git")
+                            checkoutSCM(checkoutType: 'tag', branchName: "v0.5.1", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/pgvector.git")
+                        }
+                    }
+                    if (params.PLUGIN_PLR) {
+                        plugins.add("plr")
+                        dir('contrib/plr') {
+                            // checkoutSCM(checkoutType: 'branch', branchName: "master", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/plr.git")
+                            checkoutSCM(checkoutType: 'tag', branchName: "REL8_4_6", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/plr.git")
+                        }
+                    }
+                    if (params.PLUGIN_SEARCH) {
+                        plugins.add("pdbsearch")
+                    }
+
+                    if(params.PLUGIN_HISTORY){
+                        plugins.add("pdb_history")
+                    }
+		    
+                    if(params.PLUGIN_TDE){
+                        plugins.add("pdb_tde")
+                    }
+
+                    if(params.PLUGIN_MYSQL_FDW){
+                        plugins.add("mysql_fdw")
+                        dir('pdbcontrib/mysql_fdw') {
+                             checkoutSCM(checkoutType: 'branch', branchName: "tsp-REL-2_8_0", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/mysql_fdw.git")
+                        }
+                    }
+
+                    if(params.PLUGIN_PDB_FUM){
+                        plugins.add("pdb_fum")
+                    }
+	            
+                    if(params.PLUGIN_POST_GIS){
+                        plugins.add("postgis")
+                    }                    
+	
+                    if(params.PLUGIN_ORACLE_FDW){
+                        plugins.add("oracle_fdw")
+                        dir('pdbcontrib/oracle_fdw') {
+                            checkoutSCM(checkoutType: 'branch', branchName: "v2.7.0-tp", gitUrl: "ssh://git@ssh.git.dev.openpie.com:2222/tsp/oracle_fdw.git")
+                        }
+                    }
+
+                    if(params.PLUGIN_PDB_FUM){
+                        plugins.add("pdb_fum")
+                    }
+
+                    if(params.PLUGIN_AGE){
+                        plugins.add("age")
+                    }
+
+                    if(params.PLUGIN_MPPSQL){
+                        plugins.add("mppsql_fdw")
+                    }
+
+                    if(params.PLUGIN_TIMESERIES){
+                        plugins.add("pg_timeseries")
+                    }
+                    def arch = "x86_64"
+                    def os = params.OS
+                    if (params.ARCH == Constant.cpuArch.ARM64.str) {
+                        arch = "arm64"
+                    }
+                    def faissAccelerationType = env.FAISS_ACCELERATION
+                    def jobs = [:]
+                    for (int j = 0; j < productNames.size(); j++) {
+                        def productName = productNames[j]
+                        for (int i = 0; i < compileTypes.size(); i++) {
+                            def compileType = compileTypes[i]
+                            def stageName = productName + "|" + compileType
+                            jobs[stageName] = {
+                                stage(stageName) {
+                                    stage(stageName) {
+                                        if (params.RELEASE) {
+                                            sh(script: "ARCH=${arch} BUILD_TARGET=prod ./jenkins/scripts/build.sh \'${compileType}\' \'${productName}\' ${faissAccelerationType} \'${plugins}\'")
+                                        } else {
+                                            sh(script: "ARCH=${arch} BUILD_TARGET=dev ./jenkins/scripts/build.sh \'${compileType}\' \'${productName}\' ${faissAccelerationType} \'${plugins}\'")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    parallel jobs
+                }
+            }
+        }
+        stage('Make Binary') {
+            steps {
+                script {
+                    if (params.ONLY_BUILD_FAISS) {
+                        println("ONLY_BUILD_FAISS")
+                        return
+                    }
+                    runningStage = env.STAGE_NAME
+                    def pdbVersion = env.PDB_VERSION
+                    pdbVersion = keepDigitsAndDot(pdbVersion)
+                    if (!params.RELEASE) {
+                        pdbVersion = pdbVersion + "-test"
+                    }
+                    def arch = params.ARCH
+                    def os = params.OS
+                    for (int j = 0; j < productNames.size(); j++) {
+                        def productName = productNames[j].toLowerCase().replace(" ", "-")
+                        packageDownloadUrls = pdbMakeInstallPackage(arch: arch,os: os, version: pdbVersion, productName: productName, commitId: pdbCommitID, plugins: plugins, isRelease: params.RELEASE)
+                        if (params.PLUGIN_NN) {
+                            nnPackageDownloadUrls = pdbnnMakeInstallPackage(arch: params.ARCH, os: params.OS, version: pdbVersion, productName: productName, commitId: pdbCommitID, isRelease: params.RELEASE, faissOptLevel: params.FAISS_OPT_LEVEL)
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    if (params.ONLY_BUILD_FAISS) {
+                        println("ONLY_BUILD_FAISS")
+                        return
+                    }
+                    runningStage = env.STAGE_NAME
+                    if (Constant.operatingSystem.UBUNTU_22_04.str == params.OS && params.PRODUCT_NAME == 'PieCloudDB TP' || Constant.cpuArch.ARM64.str == params.ARCH) {
+                        def jobs = [:]
+                        def pdbVersion = env.PDB_VERSION
+                        pdbVersion = keepDigitsAndDot(pdbVersion)
+
+                        def harbor_project = 'test'
+                        if (params.RELEASE) {
+                            harbor_project = 'release'
+                        }
+                        for (int i = 0; i < compileTypes.size(); i++) {
+                            def compileType = compileTypes[i]
+                            def packageDownloadUrl = packageDownloadUrls[compileType]
+                            def tag = pdbVersion
+                            def spiloTag = pdbVersion + "-spilo"
+                            if (compileType == "debug") {
+                                tag = tag + "-" + compileType
+                                spiloTag = spiloTag + "-" + compileType
+                            }
+                            if (!params.RELEASE) {
+                                tag = tag + "-" + env.BRANCH_NAME+ "-" + env.BUILD_ID
+                                spiloTag = spiloTag + "-" + env.BRANCH_NAME+ "-" + env.BUILD_ID
+                            }
+                            if (params.OS == Constant.operatingSystem.KYLIN_V10_SP2.str) {
+                                tag = tag + "-" + Constant.operatingSystem.KYLIN_V10_SP2.str
+                                spiloTag = spiloTag + "-" + Constant.operatingSystem.KYLIN_V10_SP2.str
+                            }
+                            if (Constant.cpuArch.ARM64.str == params.ARCH) {
+                                tag = tag + "-" + Constant.cpuArch.ARM64.str
+                                spiloTag = spiloTag + "-" + Constant.cpuArch.ARM64.str
+                            }
+                            jobs[compileType] = {
+                                stage(compileType) {
+                                    stage(compileType) {
+                                        String imgUrl = "reg.dev.openpie.com/${harbor_project}/pieclouddb-tp:${tag}"
+                                        sh"""#!/bin/bash
+                                            set -ex
+                                            cd /tmp/${compileType}/postgres/jenkins/dockerfiles/release
+                                            if [[ "${params.OS}" == "kylin-v10-sp2" ]]; then
+                                                sed -i \'s#PIECLOUDDB_TP_DOWNLOAD_URL#${packageDownloadUrl}#g\' kylin-v10-sp2
+                                                sudo docker build -t ${imgUrl} -f kylin-v10-sp2 .
+                                            else
+                                                sed -i \'s#PIECLOUDDB_TP_DOWNLOAD_URL#${packageDownloadUrl}#g\' ubuntu-22.04
+                                                sudo docker build -t ${imgUrl} -f ubuntu-22.04 .
+                                            fi
+                                            sudo docker login reg.dev.openpie.com -u pdb-releaser -p PDB-password123
+                                            sudo docker push ${imgUrl}
+                                        """
+                                        imgUrls[compileType] = imgUrl
+                                    }
+                                }
+                            }
+                            jobs["spilo-" + compileType] = {
+                                stage("spilo-" + compileType) {
+                                    stage("spilo-" + compileType) {
+                                        printPodInfo(containerName: "shell")
+                                        String imgUrl = "reg.dev.openpie.com/${harbor_project}/pieclouddb-tp:${spiloTag}"
+                                        withCredentials([sshUserPrivateKey(credentialsId: 'ci-bj-hz', keyFileVariable: 'identity')]) {
+                                            sh"""#!/bin/bash
+                                                set -ex
+                                                cd /tmp/${compileType}/postgres/spilo/postgres-appliance
+                                                if [[ "${params.OS}" == "kylin-v10-sp2" ]] && [[ "${params.ARCH}" == "arm64" ]]; then
+                                                    sed -i \'s#PIECLOUDDB_TP_DOWNLOAD_URL#${packageDownloadUrl}#g\' build_scripts/base_kylin.sh
+                                                    sudo docker build --build-arg ssh_prv_key="\$(cat \$identity)" --build-arg ssh_pub_key="none" -t ${imgUrl} -f Dockerfile_kylin_v10sp2_arm64 .
+                                                else
+                                                    sed -i \'s#PIECLOUDDB_TP_DOWNLOAD_URL#${packageDownloadUrl}#g\' build_scripts/base.sh
+                                                    sudo docker build --build-arg ssh_prv_key="\$(cat \$identity)" --build-arg ssh_pub_key="none" -t ${imgUrl} .
+                                                fi
+                                                sudo docker login reg.dev.openpie.com -u pdb-releaser -p PDB-password123
+                                                sudo docker push ${imgUrl}
+                                              """
+                                        }
+                                        
+                                        imgUrls["spilo-" + compileType] = imgUrl
+                                    }
+                                }
+                            }
+                        }
+                        parallel jobs
+                    }
+                }
+            }
+        }
+        stage("Post Action") {
+            steps {
+                script {
+                    if (params.ONLY_BUILD_FAISS) {
+                        println("ONLY_BUILD_FAISS")
+                        return
+                    }
+                    if (params.RUN_TESTS) {
+                        stage('ICW') {
+                            runningStage = env.STAGE_NAME
+                            def os = params.OS
+                            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                try {
+                                    sh """#!/bin/bash
+                                        set -ex
+                                        umask 022
+                                        if [[ "${os}" == *"ubuntu"* ]] || [[ "${os}" == *"kylin-desktop"* ]]; then
+                                            ls |grep -E '^pieclouddb-tp.+deb\$' |xargs sudo dpkg -i
+                                        else
+                                            ls |grep -E '^pieclouddb-tp.+rpm\$' |xargs sudo rpm -ivh
+                                        fi
+                                        source /opt/pieclouddb-tp/pdb_env.sh
+                                        mkdir ~/data
+                                        initdb -D ~/data 
+                                        pg_ctl -D ~/data -l logfile start
+                                        make -C /tmp/debug/postgres installcheck-world
+                                    """
+                                } catch (Throwable e) {
+                                    podRetention()
+                                    error "ICW failed"
+                                }
+                            }
+                        }
+                        // if (params.PLUGIN_NN) {
+                       //     stage('pdbnn regress test') {
+                       //         runningStage = env.STAGE_NAME
+                       //         def os = params.OS
+                       //         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                       //             try {
+                       //                 sh """#!/bin/bash
+                       //                 set -ex
+                       //                 umask 022
+                       //                 source /opt/pieclouddb-tp/pdb_env.sh
+                       //                 sed -i "/shared_preload_libraries/ s/.*/shared_preload_libraries = 'pdb_nn'/" ~/data/postgresql.conf
+                       //                 pg_ctl -D ~/data -l logfile stop
+                       //                 pg_ctl -D ~/data -l logfile start
+                       //                 make -C pdbcontrib/pdbnn installcheck
+                       //             """
+                       //             } catch (Throwable e) {
+                       //                 podRetention()
+                       //                 error "pdbnn regress test failed"
+                       //                 sh """#!/bin/bash
+                       //             cat ./pdbcontrib/pdbnn/regression.diffs
+                       //          """
+                       //             }
+                       //         }
+                       //     }
+                       // }
+                        if (params.PLUGIN_SEARCH) {
+                            stage('pdb search regress test') {
+                                runningStage = env.STAGE_NAME
+                                def os = params.OS
+                                printPodInfo(containerName: "shell")
+                                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                    try {
+                                        sh """#!/bin/bash
+                                        set -ex
+                                        umask 022
+                                        source /opt/pieclouddb-tp/pdb_env.sh
+                                        pg_ctl -D ~/data -l logfile stop
+                                        pg_ctl -D ~/data -l logfile start
+                                        make -C pdbcontrib/pdbsearch installcheck
+                                    """
+                                    } catch (Throwable e) {
+                                        podRetention()
+                                        error "pdbsearch regress test failed"
+                                        sh """#!/bin/bash
+                                    cat ./pdbcontrib/pdbsearch/regression.diffs
+                                 """
+                                    }
+                                }
+                            }
+                        }
+                        if (params.PLUGIN_TIMESERIES) {
+                            stage('timeseries regress test') {
+                                runningStage = env.STAGE_NAME
+                                def os = params.OS
+                                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                    try {
+                                        sh """#!/bin/bash
+                                        set -ex
+                                        umask 022
+                                        source /opt/pieclouddb-tp/pdb_env.sh
+                                        sed -i "/shared_preload_libraries/ s/.*/shared_preload_libraries = 'pg_cron'/" ~/data/postgresql.conf
+                                        pg_ctl -D ~/data -l logfile stop
+                                        pg_ctl -D ~/data -l logfile start
+                                        make -C pdbcontrib/pg_timeseries installcheck USE_PGXS=1
+                                    """
+                                    } catch (Throwable e) {
+                                        podRetention()
+                                        error "timeseries regress test failed"
+                                        sh """#!/bin/bash
+                                    cat ./pdbcontrib/pg_timeseries/regression.diffs
+                                 """
+                                    }
+                                }
+                            }
+                        }
+                        if (params.PLUGIN_ORACLE_FDW) {
+                            stage('oracle fdw  tests') {
+                                runningStage = env.STAGE_NAME
+                                def os = params.OS
+                                printPodInfo(containerName: "shell")
+                                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                                    try {
+                                        sh '''#!/bin/bash
+                                        set -ex
+                                        umask 022
+                                        source /opt/pieclouddb-tp/pdb_env.sh
+                                        . ~/.bashrc
+                                        sudo chmod -R 755 $ORACLE_HOME
+                                        pg_ctl -D ~/data -l logfile stop
+                                        sed -i "s/shared_preload_libraries = 'pg_cron'/shared_preload_libraries = 'fum_grpc'/g"  ~/data/postgresql.conf
+                                        echo "fum_grpc.target_address = 'localhost:50051'" >> ~/data/postgresql.conf
+                                        echo "fum_grpc.ca_crt_path = '/tmp/debug/postgres/pdbcontrib/pdb_fum/fum_server/ca.crt'" >>  ~/data/postgresql.conf
+                                        echo "fum_grpc.client_crt_path = '/tmp/debug/postgres/pdbcontrib/pdb_fum/fum_server/client.crt'" >> ~/data/postgresql.conf
+                                        echo "fum_grpc.client_key_path = '/tmp/debug/postgres/pdbcontrib/pdb_fum/fum_server/client.key'" >> ~/data/postgresql.conf
+                                        pg_ctl -D ~/data -l logfile start
+                                        echo "current dir $PWD"
+                                        original_dir="$PWD"
+                                        echo "script dir $(dirname "$0")"
+                                        cd /tmp/debug/postgres/pdbcontrib/pdb_fum/fum_server/ && nohup ./server localhost:50051 123 user C##scott password tiger &
+                                        cd "$original_dir"
+                                        sed -i "s/scott/C##scott/g" pdbcontrib/oracle_fdw/sql/* 
+                                        sed -i "s/SCOTT/C##SCOTT/g" pdbcontrib/oracle_fdw/sql/*
+                                        sed -i "s/scott/C##scott/g" pdbcontrib/oracle_fdw/expected/*
+                                        sed -i "s/SCOTT/C##SCOTT/g" pdbcontrib/oracle_fdw/expected/*
+                                        make -C pdbcontrib/oracle_fdw installcheck
+                                        # sudo docker container inspect oracle >/dev/null 2>&1 && sudo docker rm --force oracle || echo "container oracle not exist, no need to delete"					
+					# docker rmi reg.dev.openpie.com/library/oracle-free:23.7.0.0-lite
+					sed -i "s/C##scott/scott/g" pdbcontrib/oracle_fdw/sql/*
+                                        sed -i "s/C##SCOTT/SCOTT/g" pdbcontrib/oracle_fdw/sql/*
+                                        sed -i "s/C##scott/scott/g" pdbcontrib/oracle_fdw/expected/*
+                                        sed -i "s/C##SCOTT/SCOTT/g" pdbcontrib/oracle_fdw/expected/*
+                                    '''
+                                    } catch (Throwable e) {
+                                        podRetention()
+                                        error "oracle fdw  test failed"
+                                        sh """#!/bin/bash
+                                    sed -i "s/C##scott/scott/g" pdbcontrib/oracle_fdw/sql/*
+                                    sed -i "s/C##SCOTT/SCOTT/g" pdbcontrib/oracle_fdw/sql/* 
+                                    sed -i "s/C##scott/scott/g" pdbcontrib/oracle_fdw/expected/*
+                                    sed -i "s/C##SCOTT/SCOTT/g" pdbcontrib/oracle_fdw/expected/*
+                                    cat ./pdbcontrib/oracle_fdw/regression.diffs
+                                 """
+                                    }
+                                }
+                            }
+			}
+                        println("TODO add test")
+
+                    } else {
+                        println("Skip tests")
+                    }
+    
+                }
+            }
+        }   
+    }
+}
+
+// TODO 可能有序列化问题，待观察
+String keepDigitsAndDot(String input) {
+    StringBuilder result = new StringBuilder();
+    for (char c : input.toCharArray()) {
+        if (Character.isDigit(c) || c == '.') {
+            result.append(c);
+        }
+    }
+    return result.toString();
+}
+
