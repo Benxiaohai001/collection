@@ -121,6 +121,8 @@ yum install psmisc
 而不是
 yum install killall
 ```
+# ldconfig
+运行时配置动态链接库
 # local: 在函数内部定义局部变量
 # lsblk: 展示所有可用的或者指定的块设备（磁盘）
 展示磁盘的maj：min  

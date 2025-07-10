@@ -67,3 +67,5 @@ git push origin 分支名 --force
 
 # 拉取远程分支到本地，并直接切换到该分支
 git checkout -b tmp origin/tmp
+## 分支代码不是最新的
+该方法拉取的可能不是最新的commit，之前本地出现过同名分支可能会基于缓存创建新分支，可以在执行之前git fetch origin刷新远程分支信息
