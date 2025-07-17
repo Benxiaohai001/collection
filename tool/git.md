@@ -8,6 +8,8 @@ git checkout src/client.rs 修改该文件后，可以通过该命令恢复； \
 git checkout log_id 恢复仓库代码到指定版本 \
 git checkout . 恢复到当前目录最近一次提交的状态 \
 # commit
+# diff
+展示不同commit 之间的不同
 # fetch:从远程获取代码库
 # log
 # rebase
