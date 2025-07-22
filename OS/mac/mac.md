@@ -41,3 +41,10 @@ omz changelog
 # 快捷键
 ^-/ ⌃⇧- go back/forward
 ctrl + 上  显示所有的打开的屏幕
+
+# 格式化磁盘 并挂载
+sudo diskutil eraseDisk FAT32 USB_Drive MBR /dev/disk2
+sudo diskutil list  /dev/disk2
+sudo mount -t DOS_FAT_32  /dev/disk2s1  /Users/baker/mnt/
+sudo diskutil mount  /dev/disk2s1
+sudo mount
