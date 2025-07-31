@@ -74,6 +74,8 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 # iostat -xt 2 检查磁盘io速率 
 # iotop 检查io速率
 # journalctl：用来查询 systemd-journald 服务收集到的日志。
+## 检查某个时间段的日志
+sudo journalctl --since "2025-07-17 01:40" --until "2025-07-17 02:05"
 # kill 发送信号到进程
 ## 常见的信号
 ```shell
