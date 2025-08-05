@@ -106,3 +106,5 @@ sudo chmod 644 /var/lib/dpkg/lock-frontend
 :>nohup.out
 # epel
 EPEL(Extra Packages for Enterprise Linux)
+# 文件类型
+s：套接字文件
