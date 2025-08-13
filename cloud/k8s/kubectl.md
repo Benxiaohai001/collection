@@ -5,3 +5,5 @@
 kubectl config set-context --current --namespace=your_namespace
 # 进入pod的指定容器
 kubectl exec -it -n jenkins postgres-pr-pr-92-68-59x1h-2jhb8-gctfd -c oracle -- bash
+# kubectl
+kubectl --insecure-skip-tls-verify 跳过apiserver的tls认证
