@@ -108,3 +108,12 @@ sudo chmod 644 /var/lib/dpkg/lock-frontend
 EPEL(Extra Packages for Enterprise Linux)
 # 文件类型
 s：套接字文件
+# 证书
+openssl
+## 检查证书支持的IP
+openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep "IP Address"
+## tip
+### crt文件
+证书文件
+### key文件
+私钥文件
