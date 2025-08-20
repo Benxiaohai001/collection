@@ -169,6 +169,9 @@ sed -i '1d' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 删除第1行字
 # set:设置shell的不同执行方式
 -e 如果shell返回结果不是0，立即退出shell \
 +e 如果返回的结果不是0，程序可以继续执行
+# sha256sum
+sha256sum /path/to/file
+检查文件 sha256 
 # shift:
 shift命令可以用于向左移动命令行参数。它将当前的命令行参数列表向左移动一个位置，并将第一个参数丢弃。这意味着，$2现在变成了$1，$3现在变成了$2，以此类推。
 # shuf 
