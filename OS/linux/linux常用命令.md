@@ -101,6 +101,7 @@ TOTAL:                  140MB           1.91Kb                976b   1.12Kb  1.2
 ## 检查某个时间段的日志
 sudo journalctl --since "2025-07-17 01:40" --until "2025-07-17 02:05"
 -u 指定某个unit
+ --since "5 minutes ago"
 例如：journalctl -u containerd 检查containerd日志
 # kill 发送信号到进程
 ## 常见的信号
@@ -159,7 +160,12 @@ min表示不同的分区
 lsblk -d -o name,rota # rote为1表示hdd，rote为0表示sdd
 # lscpu 展示cpu信息
 # lsof 展示打开的文件数和网络连接数
+-a 逻辑与（and）组合多个条件
+-i 显示进程网络连接（tcp/udp套接字）
+-P 禁用端口名解析（如80显示为80，而非http）
 -p pid 展示之指定进程的打开文件和网路链接数量
+-n 禁用主机名解析（如192.168.1.1不转为touter.local）
+lsof -i -P -n -a -p 1293 # 显示进程1293关联的端口号
 ## 怎么区分网络连接和文件
 如果 TYPE 列的值为 IPv4、IPv6、TCP、UDP、UNIX 或 unix 等，表示该行记录是一个网络连接；如果 TYPE 列的值为 REG、DIR、FIFO、CHR、BLK 或 LINK 等，表示该行记录是一个打开的文件。
 # lsscsi ： 展示scsi设备和相关属性
