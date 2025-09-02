@@ -7,6 +7,11 @@ add alisa url ：添加远程仓库及别名；
 git checkout src/client.rs 修改该文件后，可以通过该命令恢复； \
 git checkout log_id 恢复仓库代码到指定版本 \
 git checkout . 恢复到当前目录最近一次提交的状态 \
+# clone 
+克隆代码仓库到本地
+-b branchname 指定仓库分支 \
+--depth n 指定克隆几个commit \
+`git clone -b main --depth 1 http:xxx.git` # 克隆主分支最新的commit \
 # commit
 # diff
 展示不同commit 之间的不同
