@@ -187,6 +187,7 @@ parted /dev/sdc mkpart primary ext4 0% 100% 制作分区 \
 # rpm:
  -e 擦除，卸载
 ivh
+rpm -ql xz-devel # 检查xz-devel包含的文件
 # rsync 同步文件
 # sed 修改文件
 -i “s/oldstring/newstring/g” xxx.txt \
