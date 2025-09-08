@@ -4,6 +4,18 @@
 awk -F "," '{print NF}'  统计每行列数，以 ‘，’ 分割 \
 awk '{print $2}' 以空格分隔，打印第二个 \
 awk '{if (gsub(/ /,"&") != 2) print NR, $0}' line_protocol/cnodb-iot-seed-123-scale-100-2021_001 判断文件中哪一行没有两个空格
+# chmod
+修改文件，目录权限
++x 指定文件增加执行权限 \
+|权限|数字|
+|---|---|
+|读|4|
+|写|2|
+|执行|1|
+7 读写执行权限
+# chown
+改变文件目录所有者
+-R
 # crontab
 -e 编辑定时任务;定时任务日志：Var/log/cron
 # command: 执行一个简单的命令，或者打印命令的相关信息
@@ -66,6 +78,8 @@ lunix/unix中的函数，可以跳过内核缓存直接读取磁盘文件
 fdisk 磁盘分区最多2T；如果磁盘分区要求大于2T，可以使用parted
 # find
 find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
+# gunzip
+gunzip file.gz
 # free 检查内存
 -h
 # head  显示开始的几行
@@ -150,6 +164,12 @@ yum install psmisc
 而不是
 yum install killall
 ```
+# ld
+链接器 \
+将多个目标文件和库文件链接成可指执行文件或者库文件
+# ldd
+动态库依赖查看器 \
+打印程序或者库文件运行时所需的共享库列表
 # ldconfig
 运行时配置动态链接库
 # local: 在函数内部定义局部变量
@@ -226,8 +246,16 @@ tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&
 
 # daemon-reload重新加载系统配置
 # tar 
+-c 压缩
+-f 指定归档文件
+-v 展示详细过程
+-x 解压文件
+-z 通过zstd,gzip 过滤归档
 -C 解压到指定目录
 -o pipefail 管道中间有有非零返回值，直接返回；
+## 常用的组合
+tar -zxvf file.tar.gz
+tar -zcvf file.tar.gz dirname
 # top
 -p 监控具体的进程
 # trap 捕捉信号或事件并执行命令

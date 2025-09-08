@@ -10,7 +10,8 @@ _斜体_
 **加粗**
 * 分条展示信息
 
-[超链接](https://markdown.com.cn)
+[超链接](https://markdown.com.cn) \
+[跳转到rust readme](./rust/readme.md)
 
 * 小标题
     * 小标题内嵌
