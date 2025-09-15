@@ -78,10 +78,14 @@ lunix/unix中的函数，可以跳过内核缓存直接读取磁盘文件
 fdisk 磁盘分区最多2T；如果磁盘分区要求大于2T，可以使用parted
 # find
 find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
-# gunzip
-gunzip file.gz
 # free 检查内存
 -h
+# fuser 显示进程占用
+不仅显示用户级别进程占用，也显示内核级别
+-v 显示详细信息
+# gunzip
+gunzip file.gz
+
 # head  显示开始的几行
 -n 指定行数
 # hexdump: linux下二进制查看工具
@@ -181,10 +185,12 @@ lsblk -d -o name,rota # rote为1表示hdd，rote为0表示sdd
 # lscpu 展示cpu信息
 # lsof 展示打开的文件数和网络连接数
 -a 逻辑与（and）组合多个条件
++D 递归检查目录
 -i 显示进程网络连接（tcp/udp套接字）
 -P 禁用端口名解析（如80显示为80，而非http）
 -p pid 展示之指定进程的打开文件和网路链接数量
 -n 禁用主机名解析（如192.168.1.1不转为touter.local）
+lsof +D /path/ 递归检查目录中是否有进程占用
 lsof -i -P -n -a -p 1293 # 显示进程1293关联的端口号
 ## 怎么区分网络连接和文件
 如果 TYPE 列的值为 IPv4、IPv6、TCP、UDP、UNIX 或 unix 等，表示该行记录是一个网络连接；如果 TYPE 列的值为 REG、DIR、FIFO、CHR、BLK 或 LINK 等，表示该行记录是一个打开的文件。
