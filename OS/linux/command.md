@@ -83,6 +83,9 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 # fuser 显示进程占用
 不仅显示用户级别进程占用，也显示内核级别
 -v 显示详细信息
+# grep
+-A n: 显示包含指定字符串之后n行
+-B n: 显示包含指定字符串之前n行
 # gunzip
 gunzip file.gz
 
