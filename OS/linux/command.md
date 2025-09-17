@@ -84,8 +84,11 @@ find /home/user -type d -name "my_folder"  查找指定名称的目录位置 \
 不仅显示用户级别进程占用，也显示内核级别
 -v 显示详细信息
 # grep
--A n: 显示包含指定字符串之后n行
--B n: 显示包含指定字符串之前n行
+-A n: 显示包含指定字符串之后n行 \
+-B n: 显示包含指定字符串之前n行 \
+-E : PATTERNS 是扩展的正则表达式 \
+`grep -E 'st1|st2'`
+
 # gunzip
 gunzip file.gz
 
