@@ -1,0 +1,1 @@
+[apache parquet](https://parquet.apache.org/docs/) 一种为大数据处理而设计的列式存储格式，物理上是二进制格式存储，其结构和原数据可以被解析和展示为一种可读的文本形式。
