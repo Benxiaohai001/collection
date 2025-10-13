@@ -14,6 +14,7 @@ git checkout . 恢复到当前目录最近一次提交的状态 \
 克隆代码仓库到本地
 -b branchname 指定仓库分支 \
 --depth n 指定克隆几个commit \
+--recurse-submodules 递归克隆子模块 \
 `git clone -b main --depth 1 http:xxx.git` # 克隆主分支最新的commit \
 # commit
 # diff
