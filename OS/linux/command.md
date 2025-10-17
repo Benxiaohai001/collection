@@ -209,6 +209,8 @@ make编译出现如下错误时，修改cmakelist。txt文件；这里是把部�
 
 
 # maven 项目管理/测试工具
+# md5sum 检查文件md5值
+md5sum /path/to/filename
 # more 与cat类似，不过会一页一页的展示数据；
 # nc
 任意tcp/udp的连接和监听
