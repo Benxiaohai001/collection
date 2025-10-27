@@ -22,6 +22,14 @@ awk '{if (gsub(/ /,"&") != 2) print NR, $0}' line_protocol/cnodb-iot-seed-123-sc
 -p
 -V
 -v
+## command -v VS. which
+||which| command -v | 直接输入python3时|
+|---|---|---|---|
+|类型|外部命令|shell内置命令||
+|查找范围|主要在$PATH中列出的目录中查找可执行文件|除了$PATH，还会考虑shell别名（alias）， 函数（function）和内置命令||
+|输出差异原因|显示$PATH查找的可执行文件路径|如果存在别名和函数，会显示别名和函数的定义，而不是原始路径|shell会按照command -v 所揭示的规则来执行命令，优先使用别名或者函数|
+|可靠性|适用于快速查看文件位置|更准确反映shell十九如何解释或者执行python3这个命令||
+
 # curl 与服务端传输数据
 * -I, --head
 仅获取请求头
@@ -183,6 +191,18 @@ yum install killall
 # ldconfig
 运行时配置动态链接库
 # local: 在函数内部定义局部变量
+# ln 文件之间做一个链接
+ln original_file.txt hardlink_file.txt \
+-s 软连接(默认是硬连接) `ln -s /path/to/original_file.txt softlink_file.txt`
+||硬链接|软链接|
+|---|---|---|
+|本质|指向文件数据块的多个文件名|存储目标路径的独立文件（类似快捷方式）|
+|inode|与原始文件相同，共享同一个inode|拥有独立的inode|
+|跨文件系统|不支持|支持，可以链接到不同分区或磁盘上的文件|
+|链接目录|不允许|允许，可以非常方便的创建目录快捷方式|
+|原始文件删除|不受影响。硬连接可以正常访问数据，直到所有指向该inode的链接被删除，数据才会真正释放|变为“死链接”。链接无效，无法再访问|
+|文件大小|与原始文件相同（他们共享数据块）|等于它所包含的目标文件路径字符串的长度|
+|辨识方式|ls -l查看时，第二列“链接数”大于1|ls -l查看时，首字母为l，并显示-> 指向目标路径|
 # lsblk: 展示所有可用的或者指定的块设备（磁盘）
 展示磁盘的maj：min  
 maj表示不同的设备；
@@ -257,6 +277,12 @@ systemctl disable node_exporter // 取消开机启动
 # tcpdump
 tcpdump -i any -A 'tcp port 8902 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
 获取指定端口被访问api
+# type 显示命令信息
+内置shell命令，可以提供如下信息：
+* 内置shell命令
+* 外部可执行程序
+* shell 函数
+* 别名
 
 # daemon-reload重新加载系统配置
 # tar 

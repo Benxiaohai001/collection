@@ -117,3 +117,15 @@ openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep "IP Addre
 证书文件
 ### key文件
 私钥文件
+# 文件压缩
+||tar.gz|tar.xz|
+|---|---|---|
+|压缩算法|gzip|lzma/xz|
+|压缩速度|***快|*慢|
+|压缩率|中等|极高(比gzip高约30%)|
+|解压速度|***快|*较慢|
+|cpu/内存|较低|较高|
+|通用型|极高|较新|
+|典型扩展名|.tar.gz,.tgz|.tar.xz,txz|
+|压缩|tar zcvf file.tar.gz dir|tar -cJvf file.tar.xz dir|
+|解压|tar -zxvf file.tar.gz| tar xJvf file.tar.xz|
