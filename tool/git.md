@@ -80,3 +80,16 @@ git push origin 分支名 --force
 git checkout -b tmp origin/tmp
 ## 分支代码不是最新的
 该方法拉取的可能不是最新的commit，之前本地出现过同名分支可能会基于缓存创建新分支，可以在执行之前git fetch origin刷新远程分支信息
+
+# 同步公司外部仓库代码
+1. 公司内仓库创建一个空仓（不要添加任何内容）；
+2. 克隆一个裸仓库到本地机器。
+```git
+git clone --mirror https://github.com/username/your-repo.git
+cd your-repo.git
+```
+--mirror参数会克隆仓库的​​所有分支、标签和引用​​，为完整镜像做准备。
+3. 将克隆仓库推送到公司内部新仓库。
+```git
+git push --mirror https://your-company-git-server/username/new-repo.git
+```
