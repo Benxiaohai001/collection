@@ -26,3 +26,7 @@ SHOW shared_preload_libraries; sql检查
 gpstop -ra 集群重启
 
 gpconfig -c shared_preload_libraries -v 'metrics_collector' 集群修改参数
+
+# 系统视图
+pg_stat_activity 
+检查系统中当前进行的查询
