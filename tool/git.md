@@ -16,6 +16,17 @@ git checkout . 恢复到当前目录最近一次提交的状态 \
 --depth n 指定克隆几个commit \
 --recurse-submodules 递归克隆子模块 \
 `git clone -b main --depth 1 http:xxx.git` # 克隆主分支最新的commit \
+# config
+```bash
+--global # 全局
+--local # 局部
+# 设置
+git config user.name "你的新用户名"
+git config user.email "你的新邮箱"
+# 展示
+git config user.name "你的新用户名"
+git config user.email "你的新邮箱"
+```
 # commit
 # diff
 展示不同commit 之间的不同
