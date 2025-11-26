@@ -235,6 +235,11 @@ md5sum /path/to/filename
 # nc
 任意tcp/udp的连接和监听
 nc -vzu 10.24.11.10 53
+# osinfo-query
+```bash
+osinfo-query os
+# 列出所有支持的操作系统
+```
 # parted
 parted /dev/sdc mklabel gpt 添加标签 \
 parted /dev/sdc mkpart primary ext4 0% 100% 制作分区 \
