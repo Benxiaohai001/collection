@@ -342,3 +342,18 @@ control + v进入块选择模式；
 点击d 取消注释
 # who 打印当前登陆的用户
 # wget 非交互式文件下载工具
+
+# yum
+# yum-config-manager
+yum-config-manager --add-repo https://xxx
+* https://xxx 精确到 repo
+# 列出所有可用的 containerd.io 版本，并按版本号降序排列
+yum list containerd.io --showduplicates | sort -r
+检查可用的包
+输出大概这样：
+containerd.io.x86_64  1.6.28-3.1.el7     docker-ce-stable
+containerd.io.x86_64  1.6.27-3.1.el7     docker-ce-stable
+containerd.io.x86_64  1.6.26-3.1.el7     docker-ce-stable
+下载指定的包
+# 示例：安装 1.6.28 版本
+sudo yum install -y containerd.io-1.6.28-3.1.el7

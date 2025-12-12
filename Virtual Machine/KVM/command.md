@@ -4,6 +4,8 @@
 * --all
 ## domifaddr
 网络信息
+## dumpxml
+检查虚拟机配置信息
 ## console
 连接机器
 ```bash
@@ -32,6 +34,14 @@ sudo qemu-img info /var/lib/libvirt/images/tos4.qcow2
 # virt-install
 ```bash 
 # 启动一个虚拟机
+
+sudo virt-install     --name tos4-iso-vm-001     --ram 32768     --vcpus 8     --disk path=/var/lib/libvirt/images/tos4-iso-001-disk.qcow2,size=100,format=qcow2,bus=virtio     --location /mnt/data/baker.xue/TencentOS-Server-4.4-20250805.0-aarch64-minimal.iso     --network bridge=virbr0,model=virtio   --console pty,target_type=serial  --extra-args="console=ttyS0,115200n8 serial"
+
+
+sudo virt-install     --name kylin-v10-sp3     --ram 16384     --vcpus 8     --disk path=/data/kvm/libvirt/images/kylin-iso-v10-sp3-disk.qcow2,size=200,format=qcow2,bus=virtio  --osinfo rhel8.0   --location /mnt/shared_data/baker.xue/Kylin-Server-V10-SP3-2403-Release-20240426-X86_64.iso  --network bridge=virbr0,model=virtio --graphics none  --console pty,target_type=serial --extra-args="console=ttyS0,115200n8 inst.text"
+
+
+
 sudo virt-install --name tos4-vm --ram 4096 --vcpu 2 --import --disk path=/var/lib/libvirt/images/TencentOS-Server-GenericCloud-4.4-20250805.0.aarch64.qcow2 --network bridge=virbr0,model=virtio  --graphics spice,listen=0.0.0.0 --noautoconsole
 
 sudo virt-install \
