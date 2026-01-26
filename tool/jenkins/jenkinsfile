@@ -1,0 +1,8 @@
+// Jenkinsfile moved to tools/ci/
+// For the canonical copy, see: tools/ci/jenkinsfile
+
+// This file is kept for compatibility; please update any CI references to the new path.
+# Jenkins Groovy 沙箱
+与jenkinsfile相关的Groovy脚本通常在Jenkins的Groovy沙箱中运行，以确保安全性和隔离性。
+# 这意味着某些Groovy功能可能会受到限制，以防止潜在的安全风险。
+# 如果需要使用受限的功能，可能需要管理员批准脚本的执行。

@@ -1,4 +1,0 @@
-// Jenkinsfile moved to tools/ci/
-// For the canonical copy, see: tools/ci/jenkinsfile
-
-// This file is kept for compatibility; please update any CI references to the new path.
