@@ -6,3 +6,9 @@
 与jenkinsfile相关的Groovy脚本通常在Jenkins的Groovy沙箱中运行，以确保安全性和隔离性。
 # 这意味着某些Groovy功能可能会受到限制，以防止潜在的安全风险。
 # 如果需要使用受限的功能，可能需要管理员批准脚本的执行。
+
+较新版本重启
+安全重启（等待当前正在运行的任务完成后再重启）：
+http://你的Jenkins地址/safeRestart
+强制重启（立即中止当前任务并重启）：
+http://你的Jenkins地址/restart
