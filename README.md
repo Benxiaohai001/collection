@@ -9,6 +9,7 @@
 | [ai/](ai/) | AI / 机器学习 |
 | [bilibili/](bilibili/) | Bilibili 视频笔记 |
 | [book/](book/) | 读书笔记 |
+| [career/](career/) | 职业规划 |
 | [chaos-engineering/](chaos-engineering/) | 混沌工程 |
 | [cloud/](cloud/) | 云原生 |
 | [courses/](courses/) | 课程笔记 |
