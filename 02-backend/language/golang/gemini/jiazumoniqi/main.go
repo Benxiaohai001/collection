@@ -1,11 +1,51 @@
+// 声明 package xxx
+// 1. package main 表示一个将要生成一个可执行文件的包，必须包含一个 main 函数作为程序入口点。
+// 如果没有main函数，编译时将会报错：function main is undeclared（未申报） in the main package
+// 如果前面没有package main，在编译时会报错：xxx is not a main package
+// 2. package xxx 表示这里不是一个可执行的文件，而是一个库文件，不能直接执行，但是可以被其他代码导入使用。
 package main
 
+// 导入 import
+// 1. 基础导入
+// import "fmt"
+// import "math/rand"
+// import "time"
+// 2. 组合导入（推荐）
+// 3. 导入库文件分三类：标准库，第三方库，自定义库;推荐顺序导入
 import (
-	"fmt"
-	"math/rand"
-	"time"
+	"fmt"  // 标准库，格式化输入，输出等
+	// f "fmt" // 4. 导入时重命名，使用f代替fmt
+	"math/rand"  // 标准库，用于生成伪随机数
+	"time" // 标准库，提供时间相关功能
+	// _ "github.com/lib/pq" // 5. 匿名导入，表示只执行包的init函数，不包括其他内容。
+	// . "fmt" // 6. 点导入（不推荐）可以直接使用fmt中的函数。但是可能会造成命名冲突，降低代码可读性。
 )
 
+/*
+// 结构体 struct
+// 特点： 组合数据，内存连续，无隐式开销。
+// 封装： golang通过首字母控制访问
+	// 大写开头：public，外部包可访问
+	// 小写开头：private，仅包内可访问
+// 举例：
+type Node struct {
+	IP string
+	Port int
+	User string
+	IsActive bool
+}
+// 绑定方法
+// 这是一个接收者函数，相当于给Node结构体添加了一个方法Connect，可以通过Node实例调用。
+func (n *Node) Connect() {
+	fmt.Printf("Connecting to %s:%d ...\n", n.IP, n.Port)
+}
+// 组合代替继承
+	讲一个结构体嵌入另一个结构体，实现继承的效果。匿名嵌入
+type AdminNode struct {
+	Node // 匿名嵌入
+	Level int
+}
+*/
 // Ancestor 定义家族节点
 type Ancestor struct {
 	Generation int     // 第几代
@@ -14,6 +54,8 @@ type Ancestor struct {
 }
 
 func main() {
+	// Println("这是一个点导入（不推荐）")
+	// f.Println("using alias for fmt") // 使用别名f代替fmt
 	rand.Seed(time.Now().UnixNano())
 
 	// 初始状态：假设你是宋朝的一个中产阶级
