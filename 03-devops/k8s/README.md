@@ -26,10 +26,10 @@
 - scheduler
 - controller-manager
 - kubelet
-- kube-proxy
+- [kube-proxy](./3-控制面原理/3.6-kube-proxy.md)
 
 ### 4. 网络与存储
-- Pod 网络
+- [Pod 网络](4-网络与存储/4.1-Pod网络.md)
 - Service 转发
 - DNS
 - Ingress / Gateway
