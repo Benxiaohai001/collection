@@ -1,7 +1,6 @@
-# Distributed Systems
+# DevOps / 云原生
 
-- [分布式微服务架构设计原理](1. 分布式微服务架构设计原理.md)
-- [CAP](CAP.md)
 - [工具笔记](tool.md)
-- [Raft](raft.md)
-- 存储
+- [Git](git.md)
+- [Vector](observability/vector.md)
+- [VSCode](vscode.md)

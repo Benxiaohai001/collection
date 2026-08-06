@@ -23,13 +23,15 @@
 ### 01-basics/
 - computer-architecture/ - 计算机组成原理
 - data-structures/ - 数据结构
+- 编译原理/ - 编译原理
+- distributed-systems/ - 分布式系统 (CAP, Raft, 微服务架构)
 - picture/ - 图片资源
 
 ### 02-backend/
 - language/ - 编程语言 (C, C++, Go, Java, Python, Rust)
 - database/ - 数据库
 - cache/ - 缓存/存储
-- framework/ - 框架 (编译原理, 文本格式)
+- framework/ - 框架 (GNU Make, 文本格式)
 
 ### 03-devops/
 - cloud/ - 云原生
