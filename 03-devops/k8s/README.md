@@ -21,12 +21,13 @@
 - Ingress
 
 ### 3. 控制面原理
-- apiserver
-- etcd
-- scheduler
-- controller-manager
-- kubelet
+- [apiserver](./3-控制面原理/3.1-kube-apiserver.md)
+- [etcd](./3-控制面原理/3.2-etcd.md)
+- [scheduler](./3-控制面原理/3.3-scheduler.md)
+- [controller-manager](./3-控制面原理/3.4-controller-manager.md)
+- [cloud-controller-manager](./3-控制面原理/3.5-cloud-controller-manager.md)
 - [kube-proxy](./3-控制面原理/3.6-kube-proxy.md)
+- [kubelet](./3-控制面原理/3.7-kubelet.md)
 
 ### 4. 网络与存储
 - [Pod 网络](4-网络与存储/4.1-Pod网络.md)
